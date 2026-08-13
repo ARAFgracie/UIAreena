@@ -1,6 +1,2332 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FORGE/UI — Architecture</title>
+<!doctype html>
+<!--
+  FORGE/UI DOCUMENTED STANDALONE PAGE
+  File: architecture.html
+  Purpose: Preview-only page-flow models for explaining website connectivity to AI.
+  Architecture: static HTML + CSS + JavaScript.
+  Backend: none.
+  External dependencies: none.
+  Global navigation: three-dot slide-in drawer.
+  Theme: dark/light and localStorage persistence.
+  Library size: 100 catalog entries.
+  Interaction model: preview first, then code/prompt.
+-->
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Preview-only page-flow models for explaining website connectivity to AI.">
+  <title>Architecture · FORGE/UI</title>
+  
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui;background:#08090c;color:#f5f5f5}body.light{background:#f4f5f1;color:#111}nav{height:72px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff18;position:sticky;top:0;background:#08090ccc;backdrop-filter:blur(18px);z-index:5}.light nav{background:#f4f5f1dd}.logo{font-weight:900}.dots{background:#151820;color:inherit;border:1px solid #ffffff18;border-radius:10px;padding:10px 15px;font-size:18px}.side{position:fixed;right:0;top:0;bottom:0;width:300px;background:#101217;z-index:20;padding:20px;transform:translateX(100%);transition:.3s}.side.open{transform:translateX(0)}.side a,.side button{display:block;width:100%;padding:12px;margin:5px 0;background:#151820;color:#fff;border:1px solid #ffffff12;border-radius:9px;text-decoration:none}.overlay{display:none;position:fixed;inset:0;background:#0008;z-index:10}.overlay.show{display:block}main{width:min(1200px,90%);margin:auto;padding:70px 0}.hero h1{font-size:70px;letter-spacing:-5px}.hero p{color:#888;line-height:1.7;max-width:650px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:30px 0}.tabs button{padding:10px 13px;border-radius:9px;border:1px solid #ffffff15;background:#151820;color:#aaa}.tabs button.active{background:#c8ff45;color:#111}.canvas{overflow:auto;border:1px solid #ffffff12;border-radius:20px;padding:60px;background:#101217}.flow{min-width:900px;display:flex;align-items:center;gap:12px}.node{width:150px;min-height:100px;padding:15px;border:1px solid #ffffff14;background:#151820;border-radius:14px}.node small{color:#777;font:9px monospace}.node strong{display:block;margin-top:10px}.node span{font-size:10px;color:#777}.arrow{color:#c8ff45;font-size:22px}
-</style></head><body><nav><div class="logo">FORGE/UI</div><button class="dots" onclick="openSide()">⋯</button></nav><div class="overlay" id="ov" onclick="closeSide()"></div><aside class="side" id="side"><button onclick="closeSide()">Close</button><a href="index.html">Home</a><a href="ui-library.html">UI Library</a><a href="navbar.html">Navbar</a><a href="buttons.html">Buttons</a><a href="cards.html">Cards</a><a href="forms.html">Forms</a><a href="prompts.html">Prompts</a><button onclick="document.body.classList.toggle('light')">☼ / ☾ Theme</button></aside><main><section class="hero"><h1>Architecture.</h1><p>Show the connective path of a website before building it. Select a model and understand entry, discovery, action and output at a glance.</p></section><div class="tabs" id="tabs"></div><div class="canvas"><div class="flow" id="flow"></div></div></main><script>
-const data={Ecommerce:["Homepage","Categories","Product Listing","Product Details","Cart","Checkout","Success"],Blog:["Home","Topics","Article List","Article","Author","Related"],SaaS:["Landing","Pricing","Login","Dashboard","Workspace","Settings"],Portfolio:["Home","Work","Case Study","About","Experience","Contact"],News:["Home","Topics","Story","Article","Author","Related"],Clothing:["Home","Collections","Category","Product","Size","Cart","Checkout"],Education:["Home","Courses","Course","Enrollment","Learning","Lesson","Progress"],Restaurant:["Home","Menu","Dish","Reservation","Confirmation"]};
-tabs.innerHTML=Object.keys(data).map((x,i)=>'<button class="'+(!i?'active':'')+'" onclick="show(\''+x+'\',this)">'+x+'</button>').join("");function show(k,b){document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');flow.innerHTML=data[k].map((x,i)=>'<div class="node"><small>STEP '+String(i+1).padStart(2,'0')+'</small><strong>'+x+'</strong><span>User journey node</span></div>'+ (i<data[k].length-1?'<div class="arrow">→</div>':'')).join('')}show("Ecommerce",document.querySelector('.tabs button'));function openSide(){side.classList.add('open');ov.classList.add('show')}function closeSide(){side.classList.remove('open');ov.classList.remove('show')}</script></body></html>
+:root {
+  --bg: #08090d;
+  --panel: #10131a;
+  --panel-2: #151923;
+  --text: #f5f7fb;
+  --muted: #8d95a5;
+  --line: #252a36;
+  --accent: #b8ff32;
+  --accent-2: #65f7c8;
+  --shadow: 0 20px 70px rgba(0,0,0,.28);
+}
+[data-theme="light"] {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --panel-2: #eef1f5;
+  --text: #10131a;
+  --muted: #626b78;
+  --line: #dce1e8;
+  --shadow: 0 20px 60px rgba(30,40,60,.12);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(184,255,50,.07), transparent 30%),
+    var(--bg);
+  color: var(--text);
+  font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+a { color: inherit; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 74px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+}
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 850;
+  letter-spacing: -.04em;
+  font-size: 20px;
+  text-decoration: none;
+}
+.mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 35px rgba(184,255,50,.2);
+}
+.brand small { color: var(--muted); font-weight: 600; }
+.menu {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 20px;
+}
+.shell {
+  max-width: 1440px;
+  margin: auto;
+  padding: 56px 28px 100px;
+}
+.hero { max-width: 920px; }
+.eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-size: clamp(44px, 7vw, 92px);
+  line-height: .95;
+  letter-spacing: -.075em;
+  margin: 14px 0 22px;
+}
+.hero p {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 760px;
+}
+.toolbar {
+  margin: 36px 0 22px;
+  display: flex;
+  gap: 12px;
+}
+.search {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  padding: 15px 17px;
+  border-radius: 15px;
+  outline: none;
+}
+.search:focus { border-color: var(--accent); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.card {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  min-width: 0;
+}
+.preview {
+  min-height: 210px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at 50% 45%, rgba(184,255,50,.07), transparent 48%);
+}
+.body {
+  padding: 18px;
+  border-top: 1px solid var(--line);
+}
+.body h3 { margin: 0 0 4px; font-size: 16px; }
+.body p { margin: 0 0 15px; color: var(--muted); font-size: 13px; }
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+}
+.select {
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  padding: 10px 9px;
+  border-radius: 11px;
+}
+.code {
+  border: 1px solid var(--line);
+  background: #06070a;
+  color: #dfe6ef;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 800;
+}
+.accent {
+  background: var(--accent);
+  color: #071000;
+  border: 0;
+}
+.showmore {
+  display: block;
+  margin: 42px auto 0;
+  padding: 15px 22px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  font-weight: 800;
+}
+.drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: min(360px, 90vw);
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  z-index: 60;
+  transform: translateX(105%);
+  transition: .28s ease;
+  padding: 22px;
+  box-shadow: -25px 0 80px rgba(0,0,0,.25);
+}
+.drawer.open { transform: none; }
+.drawer nav { display: grid; gap: 8px; margin-top: 35px; }
+.drawer a {
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--panel-2);
+}
+.drawer .close { float: right; }
+.mode {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.switch {
+  width: 48px;
+  height: 27px;
+  border-radius: 20px;
+  background: var(--line);
+  padding: 3px;
+}
+.switch i {
+  display: block;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: .2s;
+}
+.switch.on i {
+  transform: translateX(21px);
+  background: var(--accent);
+}
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.72);
+  display: none;
+  place-items: center;
+  z-index: 80;
+  padding: 20px;
+}
+.modal.open { display: grid; }
+.modalbox {
+  width: min(900px, 100%);
+  max-height: 86vh;
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+}
+.modalhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.modal pre {
+  white-space: pre-wrap;
+  background: #07080b;
+  padding: 18px;
+  border-radius: 14px;
+  color: #dce4ef;
+  overflow: auto;
+}
+.flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 15px 0;
+}
+.node {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 18px;
+  border-radius: 16px;
+}
+.prompt {
+  white-space: pre-wrap;
+  color: var(--muted);
+  font-size: 13px;
+  background: rgba(0,0,0,.12);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+.tag {
+  display: inline-flex;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--muted);
+  font-size: 11px;
+  margin: 2px;
+}
+.footer {
+  margin-top: 70px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media (max-width: 1050px) {
+  .grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 760px) {
+  .topbar { padding: 0 16px; }
+  .shell { padding: 38px 16px 80px; }
+  .grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .preview { min-height: 175px; padding: 14px; }
+  .controls { grid-template-columns: 1fr 1fr; }
+  .controls .code { grid-column: 1 / -1; }
+  .flow { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 52px; }
+}
+@media (max-width: 450px) {
+  .grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 44px; }
+}
+</style>
+<script>
+const FORGE_ROUTES = [
+  ["index.html","Home"],
+  ["buttons.html","Buttons"],
+  ["navbar.html","Navbars"],
+  ["cards.html","Cards"],
+  ["forms.html","Forms"],
+  ["ui-library.html","UI Library"],
+  ["architecture.html","Architecture"],
+  ["prompts.html","Prompts"]
+];
+
+function forgeBoot() {
+  const savedTheme = localStorage.getItem("forge-theme") || "dark";
+  document.documentElement.dataset.theme = savedTheme;
+
+  const search = document.querySelector("#search");
+  if (search) {
+    search.addEventListener("input", () => forgeFilter(search.value));
+  }
+
+  document.querySelectorAll(".menu").forEach((button) => {
+    button.addEventListener("click", () => forgeDrawer(true));
+  });
+
+  document.querySelectorAll(".drawer .close").forEach((button) => {
+    button.addEventListener("click", () => forgeDrawer(false));
+  });
+
+  document.querySelectorAll(".drawer-link").forEach((link) => {
+    link.addEventListener("click", () => forgeDrawer(false));
+  });
+
+  const mode = document.querySelector("#mode");
+  if (mode) mode.addEventListener("click", forgeToggleTheme);
+
+  document.querySelectorAll("[data-code]").forEach((button) => {
+    button.addEventListener("click", () => forgeOpenModal("Code preview", button.dataset.code));
+  });
+
+  document.querySelectorAll("[data-prompt]").forEach((button) => {
+    button.addEventListener("click", () => forgeOpenModal("Engineered prompt", button.dataset.prompt));
+  });
+
+  document.querySelectorAll(".color-select, .shape-select").forEach((select) => {
+    select.addEventListener("change", forgeApplyControls);
+  });
+}
+
+function forgeDrawer(open) {
+  const drawer = document.querySelector(".drawer");
+  if (drawer) drawer.classList.toggle("open", open);
+}
+
+function forgeToggleTheme() {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem("forge-theme", next);
+  const switcher = document.querySelector(".switch");
+  if (switcher) switcher.classList.toggle("on", next === "light");
+}
+
+function forgeFilter(query) {
+  const q = query.trim().toLowerCase();
+  document.querySelectorAll(".card[data-name]").forEach((card) => {
+    const visible = card.dataset.name.toLowerCase().includes(q);
+    card.style.display = visible ? "" : "none";
+  });
+}
+
+function forgeShapeRadius(shape) {
+  const values = {
+    square: "8px",
+    rounded: "16px",
+    pill: "999px",
+    circle: "50%"
+  };
+  return values[shape] || "16px";
+}
+
+function forgeApplyControls(event) {
+  const card = event.target.closest(".card");
+  if (!card) return;
+
+  const target = card.querySelector(".live-target");
+  if (!target) return;
+
+  const color = card.querySelector(".color-select")?.value || "#b8ff32";
+  const shape = card.querySelector(".shape-select")?.value || "rounded";
+
+  target.style.background = color;
+  target.style.borderRadius = forgeShapeRadius(shape);
+  target.style.color = ["#ffffff","#f5f5f5"].includes(color) ? "#111" : "#071000";
+
+  if (shape === "triangle") {
+    target.textContent = "";
+    target.style.width = "0";
+    target.style.height = "0";
+    target.style.padding = "34px";
+    target.style.clipPath = "polygon(50% 0%,100% 100%,0% 100%)";
+  } else {
+    target.textContent = target.dataset.label || "Preview →";
+    target.style.width = "auto";
+    target.style.height = "auto";
+    target.style.padding = "14px 24px";
+    target.style.clipPath = "none";
+  }
+}
+
+function forgeOpenModal(title, text) {
+  const modal = document.querySelector("#modal");
+  if (!modal) return;
+
+  modal.classList.add("open");
+  modal.querySelector("h2").textContent = title;
+  modal.querySelector("pre").textContent = text;
+
+  modal.querySelector(".copy").onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      modal.querySelector(".copy").textContent = "COPIED ✓";
+      setTimeout(() => modal.querySelector(".copy").textContent = "COPY TO CLIPBOARD", 1200);
+    } catch {
+      modal.querySelector(".copy").textContent = "SELECT & COPY";
+    }
+  };
+}
+
+function forgeCloseModal() {
+  document.querySelector("#modal")?.classList.remove("open");
+}
+
+document.addEventListener("DOMContentLoaded", forgeBoot);
+</script>
+
+</head>
+<body>
+  
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <i class="mark"></i>
+    <span>FORGE <small>/UI</small></span>
+  </a>
+  <button class="menu" aria-label="Open navigation">⋯</button>
+</header>
+
+  
+<aside class="drawer">
+  <button class="menu close" aria-label="Close navigation">×</button>
+  <div class="eyebrow">FORGE/UI</div>
+  <nav>
+    <a class="drawer-link" href="index.html">⌂ Home</a>
+    <a class="drawer-link" href="buttons.html">↗ Buttons</a>
+    <a class="drawer-link" href="navbar.html">☰ Navbars</a>
+    <a class="drawer-link" href="cards.html">▣ Cards</a>
+    <a class="drawer-link" href="forms.html">⌁ Forms</a>
+    <a class="drawer-link" href="ui-library.html">✦ UI Library</a>
+    <a class="drawer-link" href="architecture.html">⌘ Architecture</a>
+    <a class="drawer-link" href="prompts.html">✎ Engineered Prompts</a>
+  </nav>
+  <div class="mode">
+    <span>Light mode</span>
+    <button id="mode" class="switch" aria-label="Toggle theme"><i></i></button>
+  </div>
+</aside>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">100 Website Architectures</div>
+      <h1>Architecture</h1>
+      <p>Preview-only page-flow models for explaining website connectivity to AI. Explore, customize, inspect and copy without a backend.</p>
+    </section>
+    <div class="toolbar">
+      <input id="search" class="search" placeholder="Search this library…" autocomplete="off">
+    </div>
+    <section class="grid" id="grid">
+
+      <article class="card" data-name="E-commerce architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 001</span>
+          <h3>E-commerce website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a e-commerce.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Personal Blog architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 002</span>
+          <h3>Personal Blog website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a personal blog.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Article Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 003</span>
+          <h3>Article Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a article site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="News Portal architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 004</span>
+          <h3>News Portal website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a news portal.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Clothing Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 005</span>
+          <h3>Clothing Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a clothing store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="SaaS architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 006</span>
+          <h3>SaaS website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a saas.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Agency architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 007</span>
+          <h3>Agency website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a agency.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Portfolio architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 008</span>
+          <h3>Portfolio website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a portfolio.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Restaurant architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 009</span>
+          <h3>Restaurant website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a restaurant.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Course Platform architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 010</span>
+          <h3>Course Platform website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a course platform.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Job Board architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 011</span>
+          <h3>Job Board website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a job board.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Marketplace architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 012</span>
+          <h3>Marketplace website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a marketplace.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Travel architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 013</span>
+          <h3>Travel website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a travel.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Fitness architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 014</span>
+          <h3>Fitness website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a fitness.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Real Estate architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 015</span>
+          <h3>Real Estate website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a real estate.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Event Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 016</span>
+          <h3>Event Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a event site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Documentation architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 017</span>
+          <h3>Documentation website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a documentation.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Community architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 018</span>
+          <h3>Community website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a community.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Podcast architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 019</span>
+          <h3>Podcast website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a podcast.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Creator Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 020</span>
+          <h3>Creator Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a creator store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="E-commerce architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 021</span>
+          <h3>E-commerce website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a e-commerce.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Personal Blog architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 022</span>
+          <h3>Personal Blog website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a personal blog.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Article Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 023</span>
+          <h3>Article Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a article site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="News Portal architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 024</span>
+          <h3>News Portal website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a news portal.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Clothing Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 025</span>
+          <h3>Clothing Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a clothing store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="SaaS architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 026</span>
+          <h3>SaaS website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a saas.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Agency architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 027</span>
+          <h3>Agency website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a agency.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Portfolio architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 028</span>
+          <h3>Portfolio website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a portfolio.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Restaurant architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 029</span>
+          <h3>Restaurant website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a restaurant.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Course Platform architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 030</span>
+          <h3>Course Platform website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a course platform.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Job Board architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 031</span>
+          <h3>Job Board website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a job board.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Marketplace architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 032</span>
+          <h3>Marketplace website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a marketplace.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Travel architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 033</span>
+          <h3>Travel website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a travel.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Fitness architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 034</span>
+          <h3>Fitness website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a fitness.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Real Estate architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 035</span>
+          <h3>Real Estate website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a real estate.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Event Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 036</span>
+          <h3>Event Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a event site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Documentation architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 037</span>
+          <h3>Documentation website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a documentation.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Community architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 038</span>
+          <h3>Community website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a community.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Podcast architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 039</span>
+          <h3>Podcast website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a podcast.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Creator Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 040</span>
+          <h3>Creator Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a creator store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="E-commerce architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 041</span>
+          <h3>E-commerce website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a e-commerce.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Personal Blog architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 042</span>
+          <h3>Personal Blog website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a personal blog.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Article Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 043</span>
+          <h3>Article Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a article site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="News Portal architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 044</span>
+          <h3>News Portal website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a news portal.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Clothing Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 045</span>
+          <h3>Clothing Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a clothing store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="SaaS architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 046</span>
+          <h3>SaaS website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a saas.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Agency architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 047</span>
+          <h3>Agency website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a agency.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Portfolio architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 048</span>
+          <h3>Portfolio website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a portfolio.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Restaurant architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 049</span>
+          <h3>Restaurant website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a restaurant.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Course Platform architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 050</span>
+          <h3>Course Platform website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a course platform.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Job Board architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 051</span>
+          <h3>Job Board website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a job board.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Marketplace architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 052</span>
+          <h3>Marketplace website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a marketplace.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Travel architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 053</span>
+          <h3>Travel website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a travel.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Fitness architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 054</span>
+          <h3>Fitness website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a fitness.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Real Estate architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 055</span>
+          <h3>Real Estate website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a real estate.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Event Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 056</span>
+          <h3>Event Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a event site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Documentation architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 057</span>
+          <h3>Documentation website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a documentation.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Community architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 058</span>
+          <h3>Community website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a community.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Podcast architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 059</span>
+          <h3>Podcast website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a podcast.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Creator Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 060</span>
+          <h3>Creator Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a creator store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="E-commerce architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 061</span>
+          <h3>E-commerce website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a e-commerce.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Personal Blog architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 062</span>
+          <h3>Personal Blog website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a personal blog.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Article Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 063</span>
+          <h3>Article Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a article site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="News Portal architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 064</span>
+          <h3>News Portal website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a news portal.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Clothing Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 065</span>
+          <h3>Clothing Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a clothing store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="SaaS architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 066</span>
+          <h3>SaaS website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a saas.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Agency architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 067</span>
+          <h3>Agency website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a agency.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Portfolio architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 068</span>
+          <h3>Portfolio website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a portfolio.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Restaurant architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 069</span>
+          <h3>Restaurant website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a restaurant.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Course Platform architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 070</span>
+          <h3>Course Platform website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a course platform.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Job Board architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 071</span>
+          <h3>Job Board website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a job board.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Marketplace architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 072</span>
+          <h3>Marketplace website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a marketplace.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Travel architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 073</span>
+          <h3>Travel website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a travel.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Fitness architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 074</span>
+          <h3>Fitness website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a fitness.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Real Estate architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 075</span>
+          <h3>Real Estate website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a real estate.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Event Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 076</span>
+          <h3>Event Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a event site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Documentation architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 077</span>
+          <h3>Documentation website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a documentation.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Community architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 078</span>
+          <h3>Community website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a community.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Podcast architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 079</span>
+          <h3>Podcast website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a podcast.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Creator Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 080</span>
+          <h3>Creator Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a creator store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="E-commerce architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 081</span>
+          <h3>E-commerce website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a e-commerce.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Personal Blog architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 082</span>
+          <h3>Personal Blog website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a personal blog.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Article Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 083</span>
+          <h3>Article Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a article site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="News Portal architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 084</span>
+          <h3>News Portal website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a news portal.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Clothing Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 085</span>
+          <h3>Clothing Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a clothing store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="SaaS architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 086</span>
+          <h3>SaaS website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a saas.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Agency architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 087</span>
+          <h3>Agency website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a agency.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Portfolio architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 088</span>
+          <h3>Portfolio website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a portfolio.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Restaurant architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 089</span>
+          <h3>Restaurant website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a restaurant.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Course Platform architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 090</span>
+          <h3>Course Platform website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a course platform.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Job Board architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 091</span>
+          <h3>Job Board website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a job board.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Marketplace architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 092</span>
+          <h3>Marketplace website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a marketplace.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Travel architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 093</span>
+          <h3>Travel website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a travel.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Fitness architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 094</span>
+          <h3>Fitness website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a fitness.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Real Estate architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 095</span>
+          <h3>Real Estate website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a real estate.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Event Site architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 096</span>
+          <h3>Event Site website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a event site.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Documentation architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 097</span>
+          <h3>Documentation website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a documentation.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Community architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 098</span>
+          <h3>Community website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a community.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Podcast architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 099</span>
+          <h3>Podcast website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a podcast.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+      <article class="card" data-name="Creator Store architecture">
+        <div class="body">
+          <span class="tag">ARCHITECTURE · 100</span>
+          <h3>Creator Store website flow</h3>
+          <p>Preview-only model showing how screens connect from entry point to outcome.</p>
+          <div class="flow">
+            <div class="node"><b>01</b><br>Home / Entry</div>
+            <div class="node"><b>02</b><br>Discovery / Detail</div>
+            <div class="node"><b>03</b><br>Action / Outcome</div>
+          </div>
+          <button class="code accent" data-prompt="Website architecture for a creator store.
+Start: Home.
+Path: Home → Discovery/List → Detail → Primary Action → Confirmation.
+Define every route, navigation relationship, CTA destination, content state, loading state, empty state, error state, mobile behavior and accessibility requirement.
+Keep the information architecture consistent and explain the connective path before writing implementation code.">COPY PROMPT</button>
+        </div>
+      </article>
+
+    </section>
+    <button class="showmore" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      Back to top ↑
+    </button>
+    <footer class="footer">
+      FORGE/UI · Static library · No backend · 100 curated entries · Mobile responsive.
+    </footer>
+  </main>
+  <div class="modal" id="modal" onclick="if(event.target===this)forgeCloseModal()">
+    <div class="modalbox">
+      <div class="modalhead">
+        <h2>Preview</h2>
+        <button class="menu" onclick="forgeCloseModal()">×</button>
+      </div>
+      <pre></pre>
+      <button class="code accent copy">COPY TO CLIPBOARD</button>
+    </div>
+  </div>
+</body>
+</html>
