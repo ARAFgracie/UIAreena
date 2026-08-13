@@ -1,41 +1,4232 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>FORGE/UI — 100 Button Designs</title>
+<!doctype html>
+<!--
+  FORGE/UI DOCUMENTED STANDALONE PAGE
+  File: buttons.html
+  Purpose: CTA systems ranging from basic to ultra-modern.
+  Architecture: static HTML + CSS + JavaScript.
+  Backend: none.
+  External dependencies: none.
+  Global navigation: three-dot slide-in drawer.
+  Theme: dark/light and localStorage persistence.
+  Library size: 100 catalog entries.
+  Interaction model: preview first, then code/prompt.
+-->
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CTA systems ranging from basic to ultra-modern.">
+  <title>Buttons · FORGE/UI</title>
+  
 <style>
-*{box-sizing:border-box;margin:0;padding:0}:root{--bg:#08090c;--s:#101217;--s2:#151820;--t:#f5f5f5;--m:#8d929d;--l:rgba(255,255,255,.09);--a:#c8ff45;--p:#9b7cff;--c:#52e8ff}
-body.light{--bg:#f4f5f1;--s:#fff;--s2:#eff0eb;--t:#101114;--m:#686d75;--l:rgba(0,0,0,.09);--a:#7ca900}
-body{font-family:Inter,system-ui;background:radial-gradient(circle at 15% 5%,rgba(155,124,255,.14),transparent 25%),var(--bg);color:var(--t);transition:.3s}a{color:inherit;text-decoration:none}
-nav{height:72px;position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(20px);border-bottom:1px solid var(--l);display:flex;align-items:center;justify-content:space-between;padding:0 5%}.logo{font-weight:900}.logo i{display:inline-block;width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--a),var(--c));vertical-align:middle;margin-right:8px}.dots{background:var(--s);border:1px solid var(--l);color:var(--t);width:40px;height:40px;border-radius:11px;font-size:20px}
-.side{position:fixed;right:0;top:0;bottom:0;width:310px;background:var(--s);z-index:100;border-left:1px solid var(--l);padding:22px;transform:translateX(100%);transition:.3s;box-shadow:-20px 0 60px #0004}.side.open{transform:translateX(0)}.side a,.side button{display:block;width:100%;padding:12px;margin:5px 0;background:var(--s2);border:1px solid var(--l);border-radius:10px;color:var(--t);text-align:left}.side .x{background:var(--a);color:#111}.overlay{display:none;position:fixed;inset:0;background:#0007;z-index:90}.overlay.show{display:block}
-main{width:min(1250px,90%);margin:auto;padding:70px 0}.hero h1{font-size:clamp(42px,7vw,80px);letter-spacing:-5px}.hero p{max-width:650px;color:var(--m);line-height:1.8;margin:18px 0 30px}.search{width:100%;height:52px;background:var(--s);border:1px solid var(--l);border-radius:14px;padding:0 16px;color:var(--t);outline:0;margin-bottom:20px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:var(--s);border:1px solid var(--l);border-radius:18px;overflow:hidden}.preview{height:180px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(155,124,255,.12),transparent 55%),var(--s2)}.item{padding:16px}.item h3{font-size:13px}.item p{font-size:10px;color:var(--m);margin-top:5px;line-height:1.5}.row{display:flex;gap:7px;margin-top:13px}.row select,.row button{flex:1;padding:9px;border-radius:9px;border:1px solid var(--l);background:var(--s2);color:var(--t);font-size:9px}.row button{background:var(--a);color:#111;font-weight:800;cursor:pointer}
-.ui-btn{padding:13px 20px;border:0;background:var(--a);color:#111;font-weight:800}.navx{width:90%;padding:12px;background:var(--s);border:1px solid var(--l);border-radius:12px;display:flex;justify-content:space-between;font-size:11px}.cardx{width:85%;padding:20px;border:1px solid var(--l);background:rgba(255,255,255,.05);border-radius:16px}.heroX{font-size:28px;font-weight:900}.inputx{width:85%;padding:13px;border:1px solid var(--l);border-radius:11px;background:var(--s);color:var(--t)}.badge{padding:9px 13px;border-radius:100px;background:var(--a);color:#111;font-size:10px;font-weight:800}.bento{width:85%;display:grid;grid-template-columns:1fr 1fr;gap:5px}.bento i{height:50px;background:var(--s);border:1px solid var(--l);border-radius:8px}.bento i:first-child{grid-row:span 2;height:105px}
-.modal{display:none;position:fixed;inset:0;z-index:200;background:#000b;backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.box{width:min(800px,100%);background:var(--s);border:1px solid var(--l);border-radius:20px;overflow:hidden}.mh{padding:15px 18px;border-bottom:1px solid var(--l);display:flex;justify-content:space-between}.mh button{padding:8px 12px;border:0;border-radius:8px;background:var(--a)}pre{padding:22px;overflow:auto;max-height:70vh;color:var(--t);font-size:11px;line-height:1.7}
-footer{margin-top:70px;padding:30px 5%;border-top:1px solid var(--l);color:var(--m);font-size:10px}
-@media(max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.grid{grid-template-columns:1fr}}
-</style></head><body>
-<nav><div class="logo"><i></i>FORGE/UI</div><button class="dots" onclick="openSide()">⋯</button></nav>
-<div class="overlay" id="ov" onclick="closeSide()"></div>
-<aside class="side" id="side"><button class="x" onclick="closeSide()">Close</button><h3 style="margin:20px 0">Dive deeper</h3><a href="index.html">← Home</a><a href="ui-library.html">All UI</a><a href="navbar.html">Navbar</a><a href="buttons.html">Buttons</a><a href="cards.html">Cards</a><a href="forms.html">Forms</a><a href="architecture.html">Architecture</a><a href="prompts.html">Prompts</a><button onclick="theme()">☼ / ☾ Toggle Theme</button></aside>
-<main>
-<section class="hero"><h1>100 Button Designs</h1><p>Explore 100 curated variants. Every card is a working visual concept with live customization and code preview.</p></section>
-<input class="search" id="q" placeholder="Search this library...">
-<div class="grid" id="grid"></div>
-</main>
-<footer>FORGE/UI · 100 design trials · Static frontend library</footer>
-<div class="modal" id="modal"><div class="box"><div class="mh"><strong id="mt"></strong><div><button onclick="copy()">COPY</button><button onclick="closeM()">CLOSE</button></div></div><pre id="mc"></pre></div></div>
+:root {
+  --bg: #08090d;
+  --panel: #10131a;
+  --panel-2: #151923;
+  --text: #f5f7fb;
+  --muted: #8d95a5;
+  --line: #252a36;
+  --accent: #b8ff32;
+  --accent-2: #65f7c8;
+  --shadow: 0 20px 70px rgba(0,0,0,.28);
+}
+[data-theme="light"] {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --panel-2: #eef1f5;
+  --text: #10131a;
+  --muted: #626b78;
+  --line: #dce1e8;
+  --shadow: 0 20px 60px rgba(30,40,60,.12);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(184,255,50,.07), transparent 30%),
+    var(--bg);
+  color: var(--text);
+  font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+a { color: inherit; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 74px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+}
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 850;
+  letter-spacing: -.04em;
+  font-size: 20px;
+  text-decoration: none;
+}
+.mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 35px rgba(184,255,50,.2);
+}
+.brand small { color: var(--muted); font-weight: 600; }
+.menu {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 20px;
+}
+.shell {
+  max-width: 1440px;
+  margin: auto;
+  padding: 56px 28px 100px;
+}
+.hero { max-width: 920px; }
+.eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-size: clamp(44px, 7vw, 92px);
+  line-height: .95;
+  letter-spacing: -.075em;
+  margin: 14px 0 22px;
+}
+.hero p {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 760px;
+}
+.toolbar {
+  margin: 36px 0 22px;
+  display: flex;
+  gap: 12px;
+}
+.search {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  padding: 15px 17px;
+  border-radius: 15px;
+  outline: none;
+}
+.search:focus { border-color: var(--accent); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.card {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  min-width: 0;
+}
+.preview {
+  min-height: 210px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at 50% 45%, rgba(184,255,50,.07), transparent 48%);
+}
+.body {
+  padding: 18px;
+  border-top: 1px solid var(--line);
+}
+.body h3 { margin: 0 0 4px; font-size: 16px; }
+.body p { margin: 0 0 15px; color: var(--muted); font-size: 13px; }
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+}
+.select {
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  padding: 10px 9px;
+  border-radius: 11px;
+}
+.code {
+  border: 1px solid var(--line);
+  background: #06070a;
+  color: #dfe6ef;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 800;
+}
+.accent {
+  background: var(--accent);
+  color: #071000;
+  border: 0;
+}
+.showmore {
+  display: block;
+  margin: 42px auto 0;
+  padding: 15px 22px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  font-weight: 800;
+}
+.drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: min(360px, 90vw);
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  z-index: 60;
+  transform: translateX(105%);
+  transition: .28s ease;
+  padding: 22px;
+  box-shadow: -25px 0 80px rgba(0,0,0,.25);
+}
+.drawer.open { transform: none; }
+.drawer nav { display: grid; gap: 8px; margin-top: 35px; }
+.drawer a {
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--panel-2);
+}
+.drawer .close { float: right; }
+.mode {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.switch {
+  width: 48px;
+  height: 27px;
+  border-radius: 20px;
+  background: var(--line);
+  padding: 3px;
+}
+.switch i {
+  display: block;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: .2s;
+}
+.switch.on i {
+  transform: translateX(21px);
+  background: var(--accent);
+}
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.72);
+  display: none;
+  place-items: center;
+  z-index: 80;
+  padding: 20px;
+}
+.modal.open { display: grid; }
+.modalbox {
+  width: min(900px, 100%);
+  max-height: 86vh;
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+}
+.modalhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.modal pre {
+  white-space: pre-wrap;
+  background: #07080b;
+  padding: 18px;
+  border-radius: 14px;
+  color: #dce4ef;
+  overflow: auto;
+}
+.flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 15px 0;
+}
+.node {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 18px;
+  border-radius: 16px;
+}
+.prompt {
+  white-space: pre-wrap;
+  color: var(--muted);
+  font-size: 13px;
+  background: rgba(0,0,0,.12);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+.tag {
+  display: inline-flex;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--muted);
+  font-size: 11px;
+  margin: 2px;
+}
+.footer {
+  margin-top: 70px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media (max-width: 1050px) {
+  .grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 760px) {
+  .topbar { padding: 0 16px; }
+  .shell { padding: 38px 16px 80px; }
+  .grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .preview { min-height: 175px; padding: 14px; }
+  .controls { grid-template-columns: 1fr 1fr; }
+  .controls .code { grid-column: 1 / -1; }
+  .flow { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 52px; }
+}
+@media (max-width: 450px) {
+  .grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 44px; }
+}
+</style>
 <script>
-const type="button";let current="";
-const names={
-navbar:["Minimal Glass","Floating","SaaS","Editorial","E-commerce","Fashion","Portfolio","Mega Menu","Pill Nav","Split Nav","Centered","Transparent","Blur","Sticky","Compact","Command","Sidebar","Bottom Mobile","Gradient","Monochrome"],
-button:["Minimal CTA","Glass CTA","Magnetic","Liquid","Shimmer","Neon","3D","Pill","Circle","Square","Outline","Ghost","Gradient","Split","Arrow","Download","Play","Add","Delete","Upload"],
-card:["Glass Feature","Product","Pricing","Profile","Testimonial","Blog","News","Bento","Stats","Course","Event","Team","Service","Review","Portfolio","Image","Video","Article","Offer","Comparison"],
-form:["Email","Search","Login","Signup","Contact","Newsletter","OTP","Checkout","Address","Profile","Feedback","Booking","Payment","Upload","Password","Multi-step","Filter","Range","Date","File"]
-};
-const base=names[type]||names.card;
-const items=Array.from({length:100},(_,i)=>base[i%base.length]+" · "+String(i+1).padStart(2,"0"));
-function visual(i){if(type==="navbar")return '<div class="navx"><b>FORGE</b><span>Explore →</span></div>';if(type==="button")return '<button class="ui-btn">'+items[i].split(" · ")[0]+' →</button>';if(type==="forms")return '<input class="inputx" placeholder="Your input...">';if(type==="cards")return '<div class="cardx"><b>'+items[i].split(" · ")[0]+'</b><p>Modern reusable interface.</p></div>';return '<div class="heroX">Build '+(i+1)+'.</div>'}
-function render(q=""){grid.innerHTML="";items.forEach((n,i)=>{if(!n.toLowerCase().includes(q))return;let d=document.createElement("article");d.className="card";d.innerHTML='<div class="preview">'+visual(i)+'</div><div class="item"><h3>'+n+'</h3><p>Reusable '+type+' design with production-ready structure.</p><div class="row"><select><option>Live Color</option><option>Lime</option><option>Purple</option><option>Cyan</option></select><select><option>Shape</option><option>Rounded</option><option>Square</option><option>Pill</option></select><button onclick="openCode('+i+')">CODE</button></div></div>';grid.appendChild(d)})}
-render();q.oninput=e=>render(e.target.value.toLowerCase());
-function openCode(i){current=type+" — "+items[i]+"\n\n<!-- Production-ready "+type+" component -->\n"+visual(i);mt.textContent=items[i];mc.textContent=current;modal.classList.add("show")}function closeM(){modal.classList.remove("show")}function copy(){navigator.clipboard.writeText(current)}function openSide(){side.classList.add("open");ov.classList.add("show")}function closeSide(){side.classList.remove("open");ov.classList.remove("show")}function theme(){document.body.classList.toggle("light");localStorage.setItem("forge",document.body.classList.contains("light")?"light":"dark")}if(localStorage.getItem("forge")==="light")document.body.classList.add("light");
-</script></body></html>
+const FORGE_ROUTES = [
+  ["index.html","Home"],
+  ["buttons.html","Buttons"],
+  ["navbar.html","Navbars"],
+  ["cards.html","Cards"],
+  ["forms.html","Forms"],
+  ["ui-library.html","UI Library"],
+  ["architecture.html","Architecture"],
+  ["prompts.html","Prompts"]
+];
+
+function forgeBoot() {
+  const savedTheme = localStorage.getItem("forge-theme") || "dark";
+  document.documentElement.dataset.theme = savedTheme;
+
+  const search = document.querySelector("#search");
+  if (search) {
+    search.addEventListener("input", () => forgeFilter(search.value));
+  }
+
+  document.querySelectorAll(".menu").forEach((button) => {
+    button.addEventListener("click", () => forgeDrawer(true));
+  });
+
+  document.querySelectorAll(".drawer .close").forEach((button) => {
+    button.addEventListener("click", () => forgeDrawer(false));
+  });
+
+  document.querySelectorAll(".drawer-link").forEach((link) => {
+    link.addEventListener("click", () => forgeDrawer(false));
+  });
+
+  const mode = document.querySelector("#mode");
+  if (mode) mode.addEventListener("click", forgeToggleTheme);
+
+  document.querySelectorAll("[data-code]").forEach((button) => {
+    button.addEventListener("click", () => forgeOpenModal("Code preview", button.dataset.code));
+  });
+
+  document.querySelectorAll("[data-prompt]").forEach((button) => {
+    button.addEventListener("click", () => forgeOpenModal("Engineered prompt", button.dataset.prompt));
+  });
+
+  document.querySelectorAll(".color-select, .shape-select").forEach((select) => {
+    select.addEventListener("change", forgeApplyControls);
+  });
+}
+
+function forgeDrawer(open) {
+  const drawer = document.querySelector(".drawer");
+  if (drawer) drawer.classList.toggle("open", open);
+}
+
+function forgeToggleTheme() {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem("forge-theme", next);
+  const switcher = document.querySelector(".switch");
+  if (switcher) switcher.classList.toggle("on", next === "light");
+}
+
+function forgeFilter(query) {
+  const q = query.trim().toLowerCase();
+  document.querySelectorAll(".card[data-name]").forEach((card) => {
+    const visible = card.dataset.name.toLowerCase().includes(q);
+    card.style.display = visible ? "" : "none";
+  });
+}
+
+function forgeShapeRadius(shape) {
+  const values = {
+    square: "8px",
+    rounded: "16px",
+    pill: "999px",
+    circle: "50%"
+  };
+  return values[shape] || "16px";
+}
+
+function forgeApplyControls(event) {
+  const card = event.target.closest(".card");
+  if (!card) return;
+
+  const target = card.querySelector(".live-target");
+  if (!target) return;
+
+  const color = card.querySelector(".color-select")?.value || "#b8ff32";
+  const shape = card.querySelector(".shape-select")?.value || "rounded";
+
+  target.style.background = color;
+  target.style.borderRadius = forgeShapeRadius(shape);
+  target.style.color = ["#ffffff","#f5f5f5"].includes(color) ? "#111" : "#071000";
+
+  if (shape === "triangle") {
+    target.textContent = "";
+    target.style.width = "0";
+    target.style.height = "0";
+    target.style.padding = "34px";
+    target.style.clipPath = "polygon(50% 0%,100% 100%,0% 100%)";
+  } else {
+    target.textContent = target.dataset.label || "Preview →";
+    target.style.width = "auto";
+    target.style.height = "auto";
+    target.style.padding = "14px 24px";
+    target.style.clipPath = "none";
+  }
+}
+
+function forgeOpenModal(title, text) {
+  const modal = document.querySelector("#modal");
+  if (!modal) return;
+
+  modal.classList.add("open");
+  modal.querySelector("h2").textContent = title;
+  modal.querySelector("pre").textContent = text;
+
+  modal.querySelector(".copy").onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      modal.querySelector(".copy").textContent = "COPIED ✓";
+      setTimeout(() => modal.querySelector(".copy").textContent = "COPY TO CLIPBOARD", 1200);
+    } catch {
+      modal.querySelector(".copy").textContent = "SELECT & COPY";
+    }
+  };
+}
+
+function forgeCloseModal() {
+  document.querySelector("#modal")?.classList.remove("open");
+}
+
+document.addEventListener("DOMContentLoaded", forgeBoot);
+</script>
+
+</head>
+<body>
+  
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <i class="mark"></i>
+    <span>FORGE <small>/UI</small></span>
+  </a>
+  <button class="menu" aria-label="Open navigation">⋯</button>
+</header>
+
+  
+<aside class="drawer">
+  <button class="menu close" aria-label="Close navigation">×</button>
+  <div class="eyebrow">FORGE/UI</div>
+  <nav>
+    <a class="drawer-link" href="index.html">⌂ Home</a>
+    <a class="drawer-link" href="buttons.html">↗ Buttons</a>
+    <a class="drawer-link" href="navbar.html">☰ Navbars</a>
+    <a class="drawer-link" href="cards.html">▣ Cards</a>
+    <a class="drawer-link" href="forms.html">⌁ Forms</a>
+    <a class="drawer-link" href="ui-library.html">✦ UI Library</a>
+    <a class="drawer-link" href="architecture.html">⌘ Architecture</a>
+    <a class="drawer-link" href="prompts.html">✎ Engineered Prompts</a>
+  </nav>
+  <div class="mode">
+    <span>Light mode</span>
+    <button id="mode" class="switch" aria-label="Toggle theme"><i></i></button>
+  </div>
+</aside>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">100 Button Designs</div>
+      <h1>Buttons</h1>
+      <p>CTA systems ranging from basic to ultra-modern. Explore, customize, inspect and copy without a backend.</p>
+    </section>
+    <div class="toolbar">
+      <input id="search" class="search" placeholder="Search this library…" autocomplete="off">
+    </div>
+    <section class="grid" id="grid">
+
+      <article class="card" data-name="Magnetic CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 001</span>
+          <h3>Magnetic CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 002</span>
+          <h3>Glow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Split CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 003</span>
+          <h3>Split CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Arrow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 004</span>
+          <h3>Arrow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Download CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 005</span>
+          <h3>Download CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Shimmer CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 006</span>
+          <h3>Shimmer CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Outline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 007</span>
+          <h3>Outline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Ghost CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 008</span>
+          <h3>Ghost CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Liquid CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 009</span>
+          <h3>Liquid CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Gradient CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 010</span>
+          <h3>Gradient CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Pill CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 011</span>
+          <h3>Pill CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Neo Brutalist Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 012</span>
+          <h3>Neo Brutalist</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glass CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 013</span>
+          <h3>Glass CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Slide CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 014</span>
+          <h3>Slide CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Icon CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 015</span>
+          <h3>Icon CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Floating CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 016</span>
+          <h3>Floating CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Morph CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 017</span>
+          <h3>Morph CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Underline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 018</span>
+          <h3>Underline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="3D CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 019</span>
+          <h3>3D CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Command CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 020</span>
+          <h3>Command CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Magnetic CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 021</span>
+          <h3>Magnetic CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 022</span>
+          <h3>Glow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Split CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 023</span>
+          <h3>Split CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Arrow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 024</span>
+          <h3>Arrow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Download CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 025</span>
+          <h3>Download CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Shimmer CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 026</span>
+          <h3>Shimmer CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Outline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 027</span>
+          <h3>Outline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Ghost CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 028</span>
+          <h3>Ghost CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Liquid CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 029</span>
+          <h3>Liquid CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Gradient CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 030</span>
+          <h3>Gradient CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Pill CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 031</span>
+          <h3>Pill CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Neo Brutalist Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 032</span>
+          <h3>Neo Brutalist</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glass CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 033</span>
+          <h3>Glass CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Slide CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 034</span>
+          <h3>Slide CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Icon CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 035</span>
+          <h3>Icon CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Floating CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 036</span>
+          <h3>Floating CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Morph CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 037</span>
+          <h3>Morph CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Underline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 038</span>
+          <h3>Underline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="3D CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 039</span>
+          <h3>3D CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Command CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 040</span>
+          <h3>Command CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Magnetic CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 041</span>
+          <h3>Magnetic CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 042</span>
+          <h3>Glow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Split CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 043</span>
+          <h3>Split CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Arrow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 044</span>
+          <h3>Arrow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Download CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 045</span>
+          <h3>Download CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Shimmer CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 046</span>
+          <h3>Shimmer CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Outline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 047</span>
+          <h3>Outline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Ghost CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 048</span>
+          <h3>Ghost CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Liquid CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 049</span>
+          <h3>Liquid CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Gradient CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 050</span>
+          <h3>Gradient CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Pill CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 051</span>
+          <h3>Pill CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Neo Brutalist Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 052</span>
+          <h3>Neo Brutalist</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glass CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 053</span>
+          <h3>Glass CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Slide CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 054</span>
+          <h3>Slide CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Icon CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 055</span>
+          <h3>Icon CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Floating CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 056</span>
+          <h3>Floating CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Morph CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 057</span>
+          <h3>Morph CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Underline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 058</span>
+          <h3>Underline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="3D CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 059</span>
+          <h3>3D CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Command CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 060</span>
+          <h3>Command CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Magnetic CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 061</span>
+          <h3>Magnetic CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 062</span>
+          <h3>Glow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Split CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 063</span>
+          <h3>Split CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Arrow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 064</span>
+          <h3>Arrow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Download CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 065</span>
+          <h3>Download CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Shimmer CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 066</span>
+          <h3>Shimmer CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Outline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 067</span>
+          <h3>Outline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Ghost CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 068</span>
+          <h3>Ghost CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Liquid CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 069</span>
+          <h3>Liquid CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Gradient CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 070</span>
+          <h3>Gradient CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Pill CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 071</span>
+          <h3>Pill CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Neo Brutalist Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 072</span>
+          <h3>Neo Brutalist</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glass CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 073</span>
+          <h3>Glass CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Slide CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 074</span>
+          <h3>Slide CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Icon CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 075</span>
+          <h3>Icon CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Floating CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 076</span>
+          <h3>Floating CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Morph CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 077</span>
+          <h3>Morph CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Underline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 078</span>
+          <h3>Underline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="3D CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 079</span>
+          <h3>3D CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Command CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 080</span>
+          <h3>Command CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Magnetic CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 081</span>
+          <h3>Magnetic CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 082</span>
+          <h3>Glow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Split CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 083</span>
+          <h3>Split CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Arrow CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 084</span>
+          <h3>Arrow CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Download CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 085</span>
+          <h3>Download CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Shimmer CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 086</span>
+          <h3>Shimmer CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Outline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 087</span>
+          <h3>Outline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Ghost CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 088</span>
+          <h3>Ghost CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Liquid CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 089</span>
+          <h3>Liquid CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Gradient CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 090</span>
+          <h3>Gradient CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Pill CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 091</span>
+          <h3>Pill CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Neo Brutalist Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 092</span>
+          <h3>Neo Brutalist</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Glass CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Read More →"
+            style="background:#57b7ff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Read More →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 093</span>
+          <h3>Glass CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#57b7ff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Read More →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Slide CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Shop Now →"
+            style="background:#ffd166;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Shop Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 094</span>
+          <h3>Slide CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffd166;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Shop Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Icon CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Continue →"
+            style="background:#ffffff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Continue →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 095</span>
+          <h3>Icon CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ffffff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Continue →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Floating CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Join Now →"
+            style="background:#ff6b5f;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Join Now →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 096</span>
+          <h3>Floating CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff6b5f;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Join Now →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Morph CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Start Building →"
+            style="background:#b8ff32;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Start Building →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 097</span>
+          <h3>Morph CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#b8ff32;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Start Building →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Underline CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Explore →"
+            style="background:#65f7c8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Explore →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 098</span>
+          <h3>Underline CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#65f7c8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Explore →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="3D CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="View Details →"
+            style="background:#8d7cff;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >View Details →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 099</span>
+          <h3>3D CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#8d7cff;border-radius:16px;padding:14px 24px;font-weight:800&quot;>View Details →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Command CTA Buttons">
+        <div class="preview">
+          <button
+            class="live-target"
+            data-label="Get Started →"
+            style="background:#ff7ab8;color:#071000;border:0;border-radius:16px;padding:14px 24px;font-weight:850"
+          >Get Started →</button>
+        </div>
+        <div class="body">
+          <span class="tag">BUTTONS · 100</span>
+          <h3>Command CTA</h3>
+          <p>Reusable buttons concept with responsive structure and live visual controls.</p>
+          <div class="controls">
+            <select class="select color-select" aria-label="Live color">
+              <option value="#b8ff32">Lime</option>
+              <option value="#65f7c8">Mint</option>
+              <option value="#8d7cff">Violet</option>
+              <option value="#ff7ab8">Pink</option>
+              <option value="#57b7ff">Blue</option>
+              <option value="#ffd166">Gold</option>
+              <option value="#ffffff">White</option>
+            </select>
+            <select class="select shape-select" aria-label="Shape">
+              <option value="rounded">Rounded</option>
+              <option value="square">Square</option>
+              <option value="pill">Pill</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+            </select>
+            <button
+              class="code accent"
+              data-code="<button class=&quot;forge-buttons&quot; style=&quot;background:#ff7ab8;border-radius:16px;padding:14px 24px;font-weight:800&quot;>Get Started →</button>"
+            >CODE</button>
+          </div>
+        </div>
+      </article>
+
+    </section>
+    <button class="showmore" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      Back to top ↑
+    </button>
+    <footer class="footer">
+      FORGE/UI · Static library · No backend · 100 curated entries · Mobile responsive.
+    </footer>
+  </main>
+  <div class="modal" id="modal" onclick="if(event.target===this)forgeCloseModal()">
+    <div class="modalbox">
+      <div class="modalhead">
+        <h2>Preview</h2>
+        <button class="menu" onclick="forgeCloseModal()">×</button>
+      </div>
+      <pre></pre>
+      <button class="code accent copy">COPY TO CLIPBOARD</button>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,196 +1,1502 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<!--
+  FORGE/UI HOME
+  Static entry point for the complete UI reference system.
+  Upload each HTML file directly to GitHub Pages or any static host.
+  No server, database, package manager or build pipeline is required.
+-->
+<html lang="en" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>FORGE/UI — UI Library</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FORGE/UI is a static UI, architecture and engineered prompt library.">
+  <title>FORGE/UI · Design Reference Library</title>
+  
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
- --bg:#08090c;--surface:#101217;--surface2:#151820;--text:#f5f5f5;--muted:#8d929d;
- --line:rgba(255,255,255,.09);--lime:#c8ff45;--purple:#9b7cff;--cyan:#52e8ff
+:root {
+  --bg: #08090d;
+  --panel: #10131a;
+  --panel-2: #151923;
+  --text: #f5f7fb;
+  --muted: #8d95a5;
+  --line: #252a36;
+  --accent: #b8ff32;
+  --accent-2: #65f7c8;
+  --shadow: 0 20px 70px rgba(0,0,0,.28);
 }
-body.light{
- --bg:#f4f5f1;--surface:#fff;--surface2:#f0f1ec;--text:#101114;--muted:#686d75;
- --line:rgba(0,0,0,.09);--lime:#7ca900;--purple:#7658dc;--cyan:#008fa5
+[data-theme="light"] {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --panel-2: #eef1f5;
+  --text: #10131a;
+  --muted: #626b78;
+  --line: #dce1e8;
+  --shadow: 0 20px 60px rgba(30,40,60,.12);
 }
-html{scroll-behavior:smooth}
-body{
- font-family:Inter,system-ui,sans-serif;background:
- radial-gradient(circle at 12% 4%,rgba(155,124,255,.16),transparent 27%),
- radial-gradient(circle at 88% 8%,rgba(82,232,255,.10),transparent 25%),var(--bg);
- color:var(--text);min-height:100vh;transition:.3s
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(184,255,50,.07), transparent 30%),
+    var(--bg);
+  color: var(--text);
+  font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.2;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:50px 50px}
-nav{position:sticky;top:0;z-index:50;height:74px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--bg) 75%,transparent);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
-.logo{font-weight:900;font-size:20px;display:flex;align-items:center;gap:9px}.mark{width:27px;height:27px;border-radius:8px;background:linear-gradient(135deg,var(--lime),var(--cyan))}
-.logo span{color:#777}.dots{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;width:42px;height:42px;font-size:21px;cursor:pointer}
-.hero{width:min(1100px,90%);margin:auto;text-align:center;padding:100px 0 70px}.eyebrow{display:inline-block;border:1px solid var(--line);padding:8px 13px;border-radius:30px;color:var(--muted);font-size:10px;letter-spacing:1px}.hero h1{font-size:clamp(48px,8vw,95px);line-height:.9;letter-spacing:-6px;margin:24px 0}.grad{background:linear-gradient(90deg,var(--lime),var(--cyan),var(--purple));-webkit-background-clip:text;color:transparent}.hero p{max-width:650px;margin:auto;color:var(--muted);line-height:1.8;font-size:15px}
-.btn{border:0;border-radius:13px;padding:13px 18px;font-weight:800;cursor:pointer}.primary{background:var(--lime);color:#101114}.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--line)}
-.hero-actions{display:flex;justify-content:center;gap:8px;margin-top:28px}
-.section{width:min(1250px,90%);margin:0 auto 90px}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px}.head h2{font-size:28px;letter-spacing:-1.5px}.head p{color:var(--muted);font-size:12px;max-width:450px;text-align:right;line-height:1.6}
-.search{width:100%;height:53px;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:15px;padding:0 17px;outline:none;margin-bottom:12px}
-.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:25px}.filter{border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:8px 12px;border-radius:30px;font-size:10px;cursor:pointer}.filter.active,.filter:hover{background:var(--lime);color:#101114}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:color-mix(in srgb,var(--surface) 92%,transparent);border:1px solid var(--line);border-radius:22px;overflow:hidden;transition:.3s}.card:hover{transform:translateY(-5px);box-shadow:0 25px 70px rgba(0,0,0,.2)}
-.preview{height:230px;background:radial-gradient(circle at center,rgba(155,124,255,.12),transparent 50%),color-mix(in srgb,var(--surface) 75%,#08090c);display:flex;align-items:center;justify-content:center;position:relative}.preview:after{content:"LIVE PREVIEW";position:absolute;top:13px;left:15px;color:#555;font:8px monospace}
-.info{padding:17px}.info h3{font-size:15px;margin-bottom:5px}.cat{font-size:9px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted)}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:15px}.select{width:100%;border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:10px;padding:10px 9px;font-size:10px;outline:none}.code{grid-column:1/-1;border:1px solid var(--line);background:var(--surface2);color:var(--text);padding:10px;border-radius:10px;cursor:pointer;font-size:10px;font-weight:800}.code:hover{background:var(--lime);color:#101114}
-.demo{padding:14px 23px;font-weight:800;border:0;transition:.25s}.lime{background:var(--lime);color:#101114}.purple{background:var(--purple);color:white}.cyan{background:var(--cyan);color:#101114}.white{background:white;color:#101114}.black{background:#090a0d;color:white;border:1px solid #333}.square{border-radius:4px}.rounded{border-radius:14px}.pill{border-radius:100px}.circle{width:105px;height:105px;padding:0;border-radius:50%}.rectangle{border-radius:7px}
-.navdemo{width:280px;padding:14px 16px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 75%,transparent);backdrop-filter:blur(15px);border-radius:15px;display:flex;align-items:center;justify-content:space-between}.navdemo strong{font-size:12px}.navdemo button{border:0;background:var(--lime);border-radius:8px;padding:7px 10px;font-size:9px}
-.glass{width:220px;padding:22px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.07);backdrop-filter:blur(20px)}.glass small{color:var(--muted);font-size:8px}.glass h3{margin:8px 0}.glass p{font-size:10px;color:var(--muted)}
-.loader{width:45px;height:45px;border:3px solid #333;border-top-color:var(--lime);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-.bento{display:grid;grid-template-columns:1fr 1fr;gap:7px;width:230px}.bento div{height:55px;border:1px solid var(--line);border-radius:10px;background:var(--surface2)}.bento div:first-child{grid-row:span 2;height:117px}
-.showmore{display:flex;justify-content:center;margin-top:28px}.showmore a{border:1px solid var(--line);background:var(--surface);color:var(--text);text-decoration:none;padding:12px 20px;border-radius:12px;font-size:11px;font-weight:800}.showmore a:hover{background:var(--lime);color:#101114}
-.side{position:fixed;right:0;top:0;bottom:0;width:310px;z-index:100;background:var(--surface);border-left:1px solid var(--line);padding:25px;transform:translateX(100%);transition:.35s;box-shadow:-25px 0 80px rgba(0,0,0,.25)}.side.open{transform:translateX(0)}.side h3{margin-bottom:25px}.side button{width:100%;padding:13px;margin:5px 0;border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:11px;text-align:left;cursor:pointer}.side .close{background:var(--lime);color:#101114;text-align:center}.side a{display:block;text-decoration:none;color:var(--text);padding:13px;border-bottom:1px solid var(--line);font-size:12px}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90;display:none}.overlay.show{display:block}
-footer{width:min(1250px,90%);margin:auto;border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:10px;display:flex;justify-content:space-between}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.grid{grid-template-columns:1fr}.hero h1{letter-spacing:-3px}.hero-actions{flex-direction:column}.head{display:block}.head p{text-align:left;margin-top:8px}footer{display:block}footer span{display:block;margin:5px 0}}
+a { color: inherit; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 74px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+}
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 850;
+  letter-spacing: -.04em;
+  font-size: 20px;
+  text-decoration: none;
+}
+.mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 35px rgba(184,255,50,.2);
+}
+.brand small { color: var(--muted); font-weight: 600; }
+.menu {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 20px;
+}
+.shell {
+  max-width: 1440px;
+  margin: auto;
+  padding: 56px 28px 100px;
+}
+.hero { max-width: 920px; }
+.eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-size: clamp(44px, 7vw, 92px);
+  line-height: .95;
+  letter-spacing: -.075em;
+  margin: 14px 0 22px;
+}
+.hero p {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 760px;
+}
+.toolbar {
+  margin: 36px 0 22px;
+  display: flex;
+  gap: 12px;
+}
+.search {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  padding: 15px 17px;
+  border-radius: 15px;
+  outline: none;
+}
+.search:focus { border-color: var(--accent); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.card {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  min-width: 0;
+}
+.preview {
+  min-height: 210px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at 50% 45%, rgba(184,255,50,.07), transparent 48%);
+}
+.body {
+  padding: 18px;
+  border-top: 1px solid var(--line);
+}
+.body h3 { margin: 0 0 4px; font-size: 16px; }
+.body p { margin: 0 0 15px; color: var(--muted); font-size: 13px; }
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+}
+.select {
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  padding: 10px 9px;
+  border-radius: 11px;
+}
+.code {
+  border: 1px solid var(--line);
+  background: #06070a;
+  color: #dfe6ef;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 800;
+}
+.accent {
+  background: var(--accent);
+  color: #071000;
+  border: 0;
+}
+.showmore {
+  display: block;
+  margin: 42px auto 0;
+  padding: 15px 22px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  font-weight: 800;
+}
+.drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: min(360px, 90vw);
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  z-index: 60;
+  transform: translateX(105%);
+  transition: .28s ease;
+  padding: 22px;
+  box-shadow: -25px 0 80px rgba(0,0,0,.25);
+}
+.drawer.open { transform: none; }
+.drawer nav { display: grid; gap: 8px; margin-top: 35px; }
+.drawer a {
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--panel-2);
+}
+.drawer .close { float: right; }
+.mode {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.switch {
+  width: 48px;
+  height: 27px;
+  border-radius: 20px;
+  background: var(--line);
+  padding: 3px;
+}
+.switch i {
+  display: block;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: .2s;
+}
+.switch.on i {
+  transform: translateX(21px);
+  background: var(--accent);
+}
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.72);
+  display: none;
+  place-items: center;
+  z-index: 80;
+  padding: 20px;
+}
+.modal.open { display: grid; }
+.modalbox {
+  width: min(900px, 100%);
+  max-height: 86vh;
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+}
+.modalhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.modal pre {
+  white-space: pre-wrap;
+  background: #07080b;
+  padding: 18px;
+  border-radius: 14px;
+  color: #dce4ef;
+  overflow: auto;
+}
+.flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 15px 0;
+}
+.node {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 18px;
+  border-radius: 16px;
+}
+.prompt {
+  white-space: pre-wrap;
+  color: var(--muted);
+  font-size: 13px;
+  background: rgba(0,0,0,.12);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+.tag {
+  display: inline-flex;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--muted);
+  font-size: 11px;
+  margin: 2px;
+}
+.footer {
+  margin-top: 70px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media (max-width: 1050px) {
+  .grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 760px) {
+  .topbar { padding: 0 16px; }
+  .shell { padding: 38px 16px 80px; }
+  .grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .preview { min-height: 175px; padding: 14px; }
+  .controls { grid-template-columns: 1fr 1fr; }
+  .controls .code { grid-column: 1 / -1; }
+  .flow { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 52px; }
+}
+@media (max-width: 450px) {
+  .grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 44px; }
+}
 </style>
+<script>
+const FORGE_ROUTES = [
+  ["index.html","Home"],
+  ["buttons.html","Buttons"],
+  ["navbar.html","Navbars"],
+  ["cards.html","Cards"],
+  ["forms.html","Forms"],
+  ["ui-library.html","UI Library"],
+  ["architecture.html","Architecture"],
+  ["prompts.html","Prompts"]
+];
+
+function forgeBoot() {
+  const savedTheme = localStorage.getItem("forge-theme") || "dark";
+  document.documentElement.dataset.theme = savedTheme;
+
+  const search = document.querySelector("#search");
+  if (search) {
+    search.addEventListener("input", () => forgeFilter(search.value));
+  }
+
+  document.querySelectorAll(".menu").forEach((button) => {
+    button.addEventListener("click", () => forgeDrawer(true));
+  });
+
+  document.querySelectorAll(".drawer .close").forEach((button) => {
+    button.addEventListener("click", () => forgeDrawer(false));
+  });
+
+  document.querySelectorAll(".drawer-link").forEach((link) => {
+    link.addEventListener("click", () => forgeDrawer(false));
+  });
+
+  const mode = document.querySelector("#mode");
+  if (mode) mode.addEventListener("click", forgeToggleTheme);
+
+  document.querySelectorAll("[data-code]").forEach((button) => {
+    button.addEventListener("click", () => forgeOpenModal("Code preview", button.dataset.code));
+  });
+
+  document.querySelectorAll("[data-prompt]").forEach((button) => {
+    button.addEventListener("click", () => forgeOpenModal("Engineered prompt", button.dataset.prompt));
+  });
+
+  document.querySelectorAll(".color-select, .shape-select").forEach((select) => {
+    select.addEventListener("change", forgeApplyControls);
+  });
+}
+
+function forgeDrawer(open) {
+  const drawer = document.querySelector(".drawer");
+  if (drawer) drawer.classList.toggle("open", open);
+}
+
+function forgeToggleTheme() {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem("forge-theme", next);
+  const switcher = document.querySelector(".switch");
+  if (switcher) switcher.classList.toggle("on", next === "light");
+}
+
+function forgeFilter(query) {
+  const q = query.trim().toLowerCase();
+  document.querySelectorAll(".card[data-name]").forEach((card) => {
+    const visible = card.dataset.name.toLowerCase().includes(q);
+    card.style.display = visible ? "" : "none";
+  });
+}
+
+function forgeShapeRadius(shape) {
+  const values = {
+    square: "8px",
+    rounded: "16px",
+    pill: "999px",
+    circle: "50%"
+  };
+  return values[shape] || "16px";
+}
+
+function forgeApplyControls(event) {
+  const card = event.target.closest(".card");
+  if (!card) return;
+
+  const target = card.querySelector(".live-target");
+  if (!target) return;
+
+  const color = card.querySelector(".color-select")?.value || "#b8ff32";
+  const shape = card.querySelector(".shape-select")?.value || "rounded";
+
+  target.style.background = color;
+  target.style.borderRadius = forgeShapeRadius(shape);
+  target.style.color = ["#ffffff","#f5f5f5"].includes(color) ? "#111" : "#071000";
+
+  if (shape === "triangle") {
+    target.textContent = "";
+    target.style.width = "0";
+    target.style.height = "0";
+    target.style.padding = "34px";
+    target.style.clipPath = "polygon(50% 0%,100% 100%,0% 100%)";
+  } else {
+    target.textContent = target.dataset.label || "Preview →";
+    target.style.width = "auto";
+    target.style.height = "auto";
+    target.style.padding = "14px 24px";
+    target.style.clipPath = "none";
+  }
+}
+
+function forgeOpenModal(title, text) {
+  const modal = document.querySelector("#modal");
+  if (!modal) return;
+
+  modal.classList.add("open");
+  modal.querySelector("h2").textContent = title;
+  modal.querySelector("pre").textContent = text;
+
+  modal.querySelector(".copy").onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      modal.querySelector(".copy").textContent = "COPIED ✓";
+      setTimeout(() => modal.querySelector(".copy").textContent = "COPY TO CLIPBOARD", 1200);
+    } catch {
+      modal.querySelector(".copy").textContent = "SELECT & COPY";
+    }
+  };
+}
+
+function forgeCloseModal() {
+  document.querySelector("#modal")?.classList.remove("open");
+}
+
+document.addEventListener("DOMContentLoaded", forgeBoot);
+</script>
+
 </head>
 <body>
+  
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <i class="mark"></i>
+    <span>FORGE <small>/UI</small></span>
+  </a>
+  <button class="menu" aria-label="Open navigation">⋯</button>
+</header>
 
-<nav>
-  <div class="logo"><div class="mark"></div>FORGE<span>/UI</span></div>
-  <button class="dots" onclick="openSide()">⋯</button>
-</nav>
-
-<div class="overlay" id="overlay" onclick="closeSide()"></div>
-
-<aside class="side" id="side">
-  <button class="close" onclick="closeSide()">Close Menu</button>
-  <h3>Explore FORGE/UI</h3>
-  <a href="#library" onclick="closeSide()">UI Library</a>
-  <a href="navbar.html">Navbar Library</a>
-  <a href="buttons.html">Button Library</a>
-  <a href="cards.html">Card Library</a>
-  <a href="forms.html">Form Library</a>
-  <a href="architecture.html">Architecture Models</a>
-  <a href="prompts.html">Engineered Prompts</a>
-  <button onclick="toggleTheme()">☼ / ☾ &nbsp; Toggle Light / Dark</button>
+  
+<aside class="drawer">
+  <button class="menu close" aria-label="Close navigation">×</button>
+  <div class="eyebrow">FORGE/UI</div>
+  <nav>
+    <a class="drawer-link" href="index.html">⌂ Home</a>
+    <a class="drawer-link" href="buttons.html">↗ Buttons</a>
+    <a class="drawer-link" href="navbar.html">☰ Navbars</a>
+    <a class="drawer-link" href="cards.html">▣ Cards</a>
+    <a class="drawer-link" href="forms.html">⌁ Forms</a>
+    <a class="drawer-link" href="ui-library.html">✦ UI Library</a>
+    <a class="drawer-link" href="architecture.html">⌘ Architecture</a>
+    <a class="drawer-link" href="prompts.html">✎ Engineered Prompts</a>
+  </nav>
+  <div class="mode">
+    <span>Light mode</span>
+    <button id="mode" class="switch" aria-label="Toggle theme"><i></i></button>
+  </div>
 </aside>
 
-<section class="hero">
-  <div class="eyebrow">THE UI CREATOR'S TOOLKIT</div>
-  <h1>Build less.<br><span class="grad">Create more.</span></h1>
-  <p>Production-ready UI, live variants, website architecture and engineered AI prompts — designed to remove the unnecessary pain between an idea and a finished website.</p>
-  <div class="hero-actions">
-    <a class="btn primary" href="#library">Explore Library →</a>
-    <a class="btn secondary" href="architecture.html">View Architecture</a>
-  </div>
-</section>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">FORGE/UI · DESIGN → CODE → PROMPT</div>
+      <h1>Build less.<br>Reference more.</h1>
+      <p>
+        A no-backend library of modern web UI, page architectures and engineered prompts.
+        Explore a design, change its visual language, inspect code, or copy a prompt that
+        gives an AI enough context to build the right thing.
+      </p>
+    </section>
+    <div class="toolbar">
+      <input id="search" class="search" placeholder="Search libraries…" autocomplete="off">
+    </div>
+    <section class="grid">
 
-<section class="section" id="library">
-  <div class="head"><h2>UI Library</h2><p>Basic components, creative systems and ultra-modern interfaces.</p></div>
-  <input class="search" id="search" placeholder="Search buttons, navbar, cards, glass, forms...">
-  <div class="filters">
-    <button class="filter active" data-filter="all">All</button>
-    <button class="filter" data-filter="button">Buttons</button>
-    <button class="filter" data-filter="navbar">Navbar</button>
-    <button class="filter" data-filter="card">Cards</button>
-    <button class="filter" data-filter="form">Forms</button>
-    <button class="filter" data-filter="hero">Hero</button>
-    <button class="filter" data-filter="navigation">Navigation</button>
-    <button class="filter" data-filter="creative">Creative</button>
-    <button class="filter" data-filter="modern">Ultra Modern</button>
-  </div>
-
-  <div class="grid" id="grid">
-    <article class="card" data-cat="button creative modern" data-name="magnetic cta button">
-      <div class="preview"><button id="demoButton" class="demo lime rounded">Start Building →</button></div>
-      <div class="info"><h3>Magnetic CTA</h3><div class="cat">Button · Creative · Modern</div>
-        <div class="controls">
-          <select class="select" onchange="liveColor(this)"><option value="lime">Lime</option><option value="purple">Purple</option><option value="cyan">Cyan</option><option value="white">White</option><option value="black">Black</option></select>
-          <select class="select" onchange="liveShape(this)"><option value="rounded">Rounded</option><option value="square">Square</option><option value="pill">Pill</option><option value="rectangle">Rectangle</option></select>
-          <button class="code" onclick="openCode('Magnetic CTA',` + "`" + `<button class="cta">Start Building →</button>` + "`" + `)">VIEW CODE</button>
+      <article class="card" data-name="Buttons">
+        <div class="preview">
+          <div>
+            <span class="tag">LIBRARY · 01</span>
+            <h3>Buttons</h3>
+            <p>CTA, magnetic, glass, glow and creative interaction patterns.</p>
+            <a class="code accent" href="buttons.html" style="display:inline-block;text-decoration:none">EXPLORE →</a>
+          </div>
         </div>
-      </div>
-    </article>
-
-    <article class="card" data-cat="navbar navigation modern" data-name="glass navbar">
-      <div class="preview"><div class="navdemo"><strong>FORGE</strong><button>Explore</button></div></div>
-      <div class="info"><h3>Glass Navbar</h3><div class="cat">Navbar · Navigation</div>
-        <div class="controls">
-          <select class="select"><option>Dark Glass</option><option>Light Glass</option></select>
-          <select class="select"><option>Rounded</option><option>Rectangle</option></select>
-          <button class="code" onclick="openCode('Glass Navbar',` + "`" + `<nav class="glass-nav">FORGE · Work · About · Contact</nav>` + "`" + `)">VIEW CODE</button>
+        <div class="body">
+          <h3>01 · Buttons</h3>
+          <p>Standalone HTML route with its own full library.</p>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="card" data-cat="card creative modern" data-name="glass feature card">
-      <div class="preview"><div class="glass"><small>FEATURED</small><h3>Build faster.</h3><p>Beautiful interfaces without unnecessary complexity.</p></div></div>
-      <div class="info"><h3>Glass Feature Card</h3><div class="cat">Card · Glass · Modern</div>
-        <div class="controls">
-          <select class="select"><option>Crystal</option><option>Frost</option><option>Dark</option></select>
-          <select class="select"><option>Rounded</option><option>Square</option></select>
-          <button class="code" onclick="openCode('Glass Feature Card',` + "`" + `<div class="glass-card">FEATURED<br><h2>Build faster.</h2></div>` + "`" + `)">VIEW CODE</button>
+      <article class="card" data-name="Navbars">
+        <div class="preview">
+          <div>
+            <span class="tag">LIBRARY · 02</span>
+            <h3>Navbars</h3>
+            <p>Navigation systems for SaaS, portfolios, stores, docs and editorial sites.</p>
+            <a class="code accent" href="navbar.html" style="display:inline-block;text-decoration:none">EXPLORE →</a>
+          </div>
         </div>
-      </div>
-    </article>
-
-    <article class="card" data-cat="card creative modern" data-name="bento grid">
-      <div class="preview"><div class="bento"><div></div><div></div><div></div></div></div>
-      <div class="info"><h3>Bento Grid</h3><div class="cat">Card · Creative</div>
-        <div class="controls">
-          <select class="select"><option>Dark</option><option>Light</option><option>Monochrome</option></select>
-          <select class="select"><option>Rounded</option><option>Square</option></select>
-          <button class="code" onclick="openCode('Bento Grid',` + "`" + `<div class="bento-grid"><div class="large">01</div><div>02</div><div>03</div></div>` + "`" + `)">VIEW CODE</button>
+        <div class="body">
+          <h3>02 · Navbars</h3>
+          <p>Standalone HTML route with its own full library.</p>
         </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="card" data-cat="creative feedback modern" data-name="orbit loader">
-      <div class="preview"><div class="loader"></div></div>
-      <div class="info"><h3>Orbit Loader</h3><div class="cat">Feedback · Animation</div>
-        <div class="controls">
-          <select class="select"><option>Lime</option><option>Purple</option><option>Cyan</option></select>
-          <select class="select"><option>Circle</option></select>
-          <button class="code" onclick="openCode('Orbit Loader',` + "`" + `<div class="orbit-loader"></div>` + "`" + `)">VIEW CODE</button>
+      <article class="card" data-name="Cards">
+        <div class="preview">
+          <div>
+            <span class="tag">LIBRARY · 03</span>
+            <h3>Cards</h3>
+            <p>Product, profile, article, pricing, stats and creative surfaces.</p>
+            <a class="code accent" href="cards.html" style="display:inline-block;text-decoration:none">EXPLORE →</a>
+          </div>
         </div>
-      </div>
-    </article>
-
-    <article class="card" data-cat="form modern" data-name="modern input">
-      <div class="preview"><input style="width:85%;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text);outline:none" placeholder="Your email address"></div>
-      <div class="info"><h3>Modern Input</h3><div class="cat">Form · Input</div>
-        <div class="controls">
-          <select class="select"><option>Dark</option><option>Light</option></select>
-          <select class="select"><option>Rounded</option><option>Square</option></select>
-          <button class="code" onclick="openCode('Modern Input',` + "`" + `<input class="modern-input" placeholder="Your email address">` + "`" + `)">VIEW CODE</button>
+        <div class="body">
+          <h3>03 · Cards</h3>
+          <p>Standalone HTML route with its own full library.</p>
         </div>
-      </div>
-    </article>
-  </div>
+      </article>
 
-  <div class="showmore"><a href="ui-library.html">Show More — Explore 100+ UI Designs →</a></div>
-</section>
+      <article class="card" data-name="Forms">
+        <div class="preview">
+          <div>
+            <span class="tag">LIBRARY · 04</span>
+            <h3>Forms</h3>
+            <p>Login, checkout, onboarding, search and conversion form systems.</p>
+            <a class="code accent" href="forms.html" style="display:inline-block;text-decoration:none">EXPLORE →</a>
+          </div>
+        </div>
+        <div class="body">
+          <h3>04 · Forms</h3>
+          <p>Standalone HTML route with its own full library.</p>
+        </div>
+      </article>
 
-<footer><span>FORGE/UI — UI without unnecessary pain.</span><span>Frontend only · Static library</span></footer>
+      <article class="card" data-name="UI Library">
+        <div class="preview">
+          <div>
+            <span class="tag">LIBRARY · 05</span>
+            <h3>UI Library</h3>
+            <p>Hero, pricing, tabs, modal, FAQ, footer and dashboard primitives.</p>
+            <a class="code accent" href="ui-library.html" style="display:inline-block;text-decoration:none">EXPLORE →</a>
+          </div>
+        </div>
+        <div class="body">
+          <h3>05 · UI Library</h3>
+          <p>Standalone HTML route with its own full library.</p>
+        </div>
+      </article>
 
-<div class="modal" id="modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px">
-  <div style="width:min(800px,100%);background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden">
-    <div style="padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center"><strong id="modalTitle"></strong><div><button class="btn primary" onclick="copyCode()">COPY</button><button class="btn secondary" onclick="closeModal()">CLOSE</button></div></div>
-    <pre id="modalCode" style="padding:22px;overflow:auto;max-height:70vh;color:var(--text);font:11px/1.7 monospace"></pre>
-  </div>
-</div>
+      <article class="card" data-name="Architecture">
+        <div class="preview">
+          <div>
+            <span class="tag">LIBRARY · 06</span>
+            <h3>Architecture</h3>
+            <p>20+ website types with page-to-page connective paths.</p>
+            <a class="code accent" href="architecture.html" style="display:inline-block;text-decoration:none">EXPLORE →</a>
+          </div>
+        </div>
+        <div class="body">
+          <h3>06 · Architecture</h3>
+          <p>Standalone HTML route with its own full library.</p>
+        </div>
+      </article>
 
-<script>
-const modal=document.getElementById('modal');let codeText='';
-function openCode(title,code){codeText=code;document.getElementById('modalTitle').textContent=title;document.getElementById('modalCode').textContent=code;modal.style.display='flex'}
-function closeModal(){modal.style.display='none'}
-function copyCode(){navigator.clipboard.writeText(codeText)}
-modal.addEventListener('click',e=>{if(e.target===modal)closeModal()})
-function liveColor(s){const b=document.getElementById('demoButton');const shape=[...b.classList].find(x=>['rounded','square','pill','rectangle'].includes(x))||'rounded';b.className='demo '+s.value+' '+shape}
-function liveShape(s){const b=document.getElementById('demoButton');['rounded','square','pill','rectangle'].forEach(x=>b.classList.remove(x));b.classList.add(s.value)}
-function openSide(){document.getElementById('side').classList.add('open');document.getElementById('overlay').classList.add('show')}
-function closeSide(){document.getElementById('side').classList.remove('open');document.getElementById('overlay').classList.remove('show')}
-function toggleTheme(){document.body.classList.toggle('light');localStorage.setItem('forge-theme',document.body.classList.contains('light')?'light':'dark')}
-if(localStorage.getItem('forge-theme')==='light')document.body.classList.add('light');
+      <article class="card" data-name="Prompts">
+        <div class="preview">
+          <div>
+            <span class="tag">LIBRARY · 07</span>
+            <h3>Prompts</h3>
+            <p>100 engineered prompts for explaining complete builds to AI.</p>
+            <a class="code accent" href="prompts.html" style="display:inline-block;text-decoration:none">EXPLORE →</a>
+          </div>
+        </div>
+        <div class="body">
+          <h3>07 · Prompts</h3>
+          <p>Standalone HTML route with its own full library.</p>
+        </div>
+      </article>
 
-const cards=[...document.querySelectorAll('.card')];
-document.getElementById('search').addEventListener('input',e=>{let q=e.target.value.toLowerCase();cards.forEach(c=>c.style.display=c.dataset.name.includes(q)?'block':'none')});
-document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-filter]').forEach(x=>x.classList.remove('active'));b.classList.add('active');let f=b.dataset.filter;cards.forEach(c=>c.style.display=f==='all'||c.dataset.cat.includes(f)?'block':'none')});
-</script>
+      <article class="card" data-name="Discovery module 1">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 01</span>
+            <h3>Reference workflow 01</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 2">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 02</span>
+            <h3>Reference workflow 02</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 3">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 03</span>
+            <h3>Reference workflow 03</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 4">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 04</span>
+            <h3>Reference workflow 04</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 5">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 05</span>
+            <h3>Reference workflow 05</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 6">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 06</span>
+            <h3>Reference workflow 06</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 7">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 07</span>
+            <h3>Reference workflow 07</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 8">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 08</span>
+            <h3>Reference workflow 08</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 9">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 09</span>
+            <h3>Reference workflow 09</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 10">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 10</span>
+            <h3>Reference workflow 10</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 11">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 11</span>
+            <h3>Reference workflow 11</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 12">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 12</span>
+            <h3>Reference workflow 12</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 13">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 13</span>
+            <h3>Reference workflow 13</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 14">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 14</span>
+            <h3>Reference workflow 14</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 15">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 15</span>
+            <h3>Reference workflow 15</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 16">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 16</span>
+            <h3>Reference workflow 16</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 17">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 17</span>
+            <h3>Reference workflow 17</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 18">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 18</span>
+            <h3>Reference workflow 18</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 19">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 19</span>
+            <h3>Reference workflow 19</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 20">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 20</span>
+            <h3>Reference workflow 20</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 21">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 21</span>
+            <h3>Reference workflow 21</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 22">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 22</span>
+            <h3>Reference workflow 22</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 23">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 23</span>
+            <h3>Reference workflow 23</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 24">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 24</span>
+            <h3>Reference workflow 24</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 25">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 25</span>
+            <h3>Reference workflow 25</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 26">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 26</span>
+            <h3>Reference workflow 26</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 27">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 27</span>
+            <h3>Reference workflow 27</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 28">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 28</span>
+            <h3>Reference workflow 28</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 29">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 29</span>
+            <h3>Reference workflow 29</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 30">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 30</span>
+            <h3>Reference workflow 30</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 31">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 31</span>
+            <h3>Reference workflow 31</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 32">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 32</span>
+            <h3>Reference workflow 32</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 33">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 33</span>
+            <h3>Reference workflow 33</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 34">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 34</span>
+            <h3>Reference workflow 34</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 35">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 35</span>
+            <h3>Reference workflow 35</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 36">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 36</span>
+            <h3>Reference workflow 36</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 37">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 37</span>
+            <h3>Reference workflow 37</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 38">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 38</span>
+            <h3>Reference workflow 38</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 39">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 39</span>
+            <h3>Reference workflow 39</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 40">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 40</span>
+            <h3>Reference workflow 40</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 41">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 41</span>
+            <h3>Reference workflow 41</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 42">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 42</span>
+            <h3>Reference workflow 42</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 43">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 43</span>
+            <h3>Reference workflow 43</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 44">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 44</span>
+            <h3>Reference workflow 44</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 45">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 45</span>
+            <h3>Reference workflow 45</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 46">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 46</span>
+            <h3>Reference workflow 46</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 47">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 47</span>
+            <h3>Reference workflow 47</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 48">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 48</span>
+            <h3>Reference workflow 48</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 49">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 49</span>
+            <h3>Reference workflow 49</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 50">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 50</span>
+            <h3>Reference workflow 50</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 51">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 51</span>
+            <h3>Reference workflow 51</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 52">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 52</span>
+            <h3>Reference workflow 52</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 53">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 53</span>
+            <h3>Reference workflow 53</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 54">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 54</span>
+            <h3>Reference workflow 54</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 55">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 55</span>
+            <h3>Reference workflow 55</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 56">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 56</span>
+            <h3>Reference workflow 56</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 57">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 57</span>
+            <h3>Reference workflow 57</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 58">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 58</span>
+            <h3>Reference workflow 58</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 59">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 59</span>
+            <h3>Reference workflow 59</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+      <article class="card" data-name="Discovery module 60">
+        <div class="preview">
+          <div>
+            <span class="tag">DISCOVERY · 60</span>
+            <h3>Reference workflow 60</h3>
+            <p>Choose a visual reference, customize it, inspect its source, then move to an architecture or prompt route.</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>Design → Code → Prompt</h3>
+          <p>The workflow stays preview-first so the user can learn before implementing.</p>
+        </div>
+      </article>
+
+    </section>
+    <footer class="footer">
+      FORGE/UI · Static HTML library · Designed for effortless experimentation.
+    </footer>
+  </main>
 </body>
 </html>
+
+<!-- =============================================================== -->
+<!-- FORGE/UI IMPLEMENTATION NOTES                                  -->
+<!-- =============================================================== -->
+<!-- Source contract 1467: this standalone document remains usable without a backend. -->
+<!-- Source contract 1467: preserve semantic controls, responsive layout and keyboard accessibility. -->
+<!-- Source contract 1467: keep preview interactions isolated to the active component. -->
+<!-- Source contract 1467: global navigation must remain reachable through the three-dot drawer. -->
+<!-- Source contract 1467: theme state may persist locally but must never require a server. -->
+<!-- Source contract 1467: code and prompt previews are copy-oriented reference output. -->
+<!-- Source contract 1473: this standalone document remains usable without a backend. -->
+<!-- Source contract 1473: preserve semantic controls, responsive layout and keyboard accessibility. -->
+<!-- Source contract 1473: keep preview interactions isolated to the active component. -->
+<!-- Source contract 1473: global navigation must remain reachable through the three-dot drawer. -->
+<!-- Source contract 1473: theme state may persist locally but must never require a server. -->
+<!-- Source contract 1473: code and prompt previews are copy-oriented reference output. -->
+<!-- Source contract 1479: this standalone document remains usable without a backend. -->
+<!-- Source contract 1479: preserve semantic controls, responsive layout and keyboard accessibility. -->
+<!-- Source contract 1479: keep preview interactions isolated to the active component. -->
+<!-- Source contract 1479: global navigation must remain reachable through the three-dot drawer. -->
+<!-- Source contract 1479: theme state may persist locally but must never require a server. -->
+<!-- Source contract 1479: code and prompt previews are copy-oriented reference output. -->
+<!-- Source contract 1485: this standalone document remains usable without a backend. -->
+<!-- Source contract 1485: preserve semantic controls, responsive layout and keyboard accessibility. -->
+<!-- Source contract 1485: keep preview interactions isolated to the active component. -->
+<!-- Source contract 1485: global navigation must remain reachable through the three-dot drawer. -->
+<!-- Source contract 1485: theme state may persist locally but must never require a server. -->
+<!-- Source contract 1485: code and prompt previews are copy-oriented reference output. -->
+<!-- Source contract 1491: this standalone document remains usable without a backend. -->
+<!-- Source contract 1491: preserve semantic controls, responsive layout and keyboard accessibility. -->
+<!-- Source contract 1491: keep preview interactions isolated to the active component. -->
+<!-- Source contract 1491: global navigation must remain reachable through the three-dot drawer. -->
+<!-- Source contract 1491: theme state may persist locally but must never require a server. -->
+<!-- Source contract 1491: code and prompt previews are copy-oriented reference output. -->
+<!-- Source contract 1497: this standalone document remains usable without a backend. -->
+<!-- Source contract 1497: preserve semantic controls, responsive layout and keyboard accessibility. -->
+<!-- Source contract 1497: keep preview interactions isolated to the active component. -->
+<!-- Source contract 1497: global navigation must remain reachable through the three-dot drawer. -->
+<!-- Source contract 1497: theme state may persist locally but must never require a server. -->
+<!-- Source contract 1497: code and prompt previews are copy-oriented reference output. -->
