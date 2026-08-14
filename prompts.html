@@ -1,4 +1,4 @@
-<!doctype html><html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Prompts — FORGE/UI</title><style>
+<!doctype html><html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Prompts — UI Areena</title><style>
 :root{--bg:#07090c;--panel:#0f1318;--panel2:#141a20;--text:#f4f7fb;--muted:#8d97a4;--line:rgba(255,255,255,.09);--accent:#b8ff2c;--accent2:#d8ff83;--drawer:#0a0d11;--shadow:0 20px 70px rgba(0,0,0,.28)}
 [data-theme="light"]{--bg:#f3f6f1;--panel:#fff;--panel2:#edf1eb;--text:#11150f;--muted:#687168;--line:rgba(15,25,15,.12);--drawer:#fff;--shadow:0 20px 60px rgba(15,25,15,.12)}
 *{box-sizing:border-box}
@@ -67,17 +67,20 @@ pre{margin:0;white-space:pre-wrap;word-break:break-word;background:#07090c;color
 @media(max-width:1050px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.sitebar{height:68px;padding:0 16px}.hero{padding-top:48px}h1{font-size:clamp(44px,14vw,70px)}.preview{min-height:190px;padding:14px}.card-info{padding:14px}.controls{grid-template-columns:1fr 1fr}.code-btn{grid-column:1/-1;width:100%}.search{top:78px}}
 @media(max-width:470px){.grid{grid-template-columns:1fr}.preview{min-height:210px}.controls{grid-template-columns:1fr 1fr}.hero p{font-size:14px}}
-.prompt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.prompt-card{border:1px solid var(--line);border-radius:22px;background:var(--panel);padding:16px}.prompt-card .tag{font-size:9px;color:var(--accent);letter-spacing:.13em;font-weight:900}.prompt-card h3{font-size:15px;margin:9px 0}.prompt-card p{font-size:10px;color:var(--muted);line-height:1.55;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}.prompt-actions{display:flex;justify-content:space-between;align-items:center;margin-top:13px}.copy-prompt{border:0;background:var(--accent);color:#071006;border-radius:9px;padding:9px 11px;font-size:9px;font-weight:950}@media(max-width:900px){.prompt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.prompt-grid{grid-template-columns:1fr}}</style></head><body><header class="sitebar"><a class="brand" href="index.html"><span class="brandmark"></span><span>FORGE</span><small>/UI</small></a><button class="menu-btn">•••</button></header>
+.prompt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.prompt-card{border:1px solid var(--line);border-radius:22px;background:var(--panel);padding:16px}.prompt-card .tag{font-size:9px;color:var(--accent);letter-spacing:.13em;font-weight:900}.prompt-card h3{font-size:15px;margin:9px 0}.prompt-card p{font-size:10px;color:var(--muted);line-height:1.55;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}.prompt-actions{display:flex;justify-content:space-between;align-items:center;margin-top:13px}.copy-prompt{border:0;background:var(--accent);color:#071006;border-radius:9px;padding:9px 11px;font-size:9px;font-weight:950}@media(max-width:900px){.prompt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.prompt-grid{grid-template-columns:1fr}}body.drawer-open{overflow:hidden!important;touch-action:none}
+.drawer{overscroll-behavior:contain}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}</style></head><body><header class="sitebar"><a class="brand" href="index.html"><span class="brandmark"></span><span>UI Areena</span><small>/UI</small></a><button class="menu-btn" aria-label="Open navigation" aria-expanded="false">•••</button></header>
 <div class="drawer" aria-hidden="true">
  <div class="scrim"></div>
  <aside class="drawer-panel" aria-label="Site navigation">
-  <div class="drawer-head"><div class="drawer-title">FORGE / UI</div><button class="close-btn" aria-label="Close">×</button></div>
+  <div class="drawer-head"><div class="drawer-title">UI Areena / UI</div><button class="close-btn" aria-label="Close">×</button></div>
   <div class="drawer-section">Library</div><div class="drawer-grid"><a class="drawer-link" href="index.html"><span>Home</span><span>01</span></a>
 <a class="drawer-link" href="buttons.html"><span>Buttons</span><span>40+</span></a>
 <a class="drawer-link" href="navbar.html"><span>Navbars</span><span>39+</span></a>
 <a class="drawer-link" href="forms.html"><span>Forms</span><span>32+</span></a>
 <a class="drawer-link" href="cards.html"><span>Cards</span><span>38+</span></a>
 <a class="drawer-link" href="ui-library.html"><span>UI Library</span><span>46+</span></a>
+<a class="drawer-link" href="icons.html"><span>Icons</span><span>320+</span></a>
 <a class="drawer-link" href="architecture.html"><span>Architecture</span><span>30+</span></a>
 <a class="drawer-link" href="prompts.html"><span>Prompts</span><span>34+</span></a></div>
   <div class="drawer-section">Appearance</div>
@@ -96,21 +99,37 @@ pre{margin:0;white-space:pre-wrap;word-break:break-word;background:#07090c;color
  </section>
 </div><div class="toast"></div>
 <script>
-const navItems=[
- ["Home","index.html","01"],["Buttons","buttons.html","72+"],["Navbars","navbar.html","64+"],
- ["Forms","forms.html","64+"],["Cards","cards.html","64+"],["UI Library","ui-library.html","80+"],
- ["Architecture","architecture.html","30+"],["Prompts","prompts.html","30+"]
-];
+const navItems=[["Home","index.html","01"],["Buttons","buttons.html","40+"],["Navbars","navbar.html","39+"],["Forms","forms.html","32+"],["Cards","cards.html","38+"],["UI Library","ui-library.html","46+"],["Icons","icons.html","320+"],["Architecture","architecture.html","30+"],["Prompts","prompts.html","34+"]];
 const drawer=document.querySelector(".drawer");
-function openDrawer(){drawer?.classList.add("open");document.body.style.overflow="hidden"}
-function closeDrawer(){drawer?.classList.remove("open");document.body.style.overflow=""}
-document.querySelector(".menu-btn")?.addEventListener("click",openDrawer);
+function openDrawer(){
+ const btn=document.querySelector(".menu-btn");
+ drawer?.classList.add("open"); document.body.classList.add("drawer-open");
+ drawer?.setAttribute("aria-hidden","false"); btn?.setAttribute("aria-expanded","true");
+ drawer?.querySelector("a,button")?.focus({preventScroll:true});
+}
+function closeDrawer(){
+ const btn=document.querySelector(".menu-btn");
+ drawer?.classList.remove("open"); document.body.classList.remove("drawer-open");
+ drawer?.setAttribute("aria-hidden","true"); btn?.setAttribute("aria-expanded","false");
+ if(document.activeElement?.closest(".drawer")) btn?.focus({preventScroll:true});
+}
+document.querySelector(".menu-btn")?.setAttribute("aria-expanded","false");
+document.querySelector(".menu-btn")?.addEventListener("click",()=>drawer?.classList.contains("open")?closeDrawer():openDrawer());
 document.querySelector(".close-btn")?.addEventListener("click",closeDrawer);
 document.querySelector(".scrim")?.addEventListener("click",closeDrawer);
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeDrawer();closeModal()}});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"){closeDrawer(); if(typeof closeModal==="function") closeModal();}
+ if(e.key==="Tab" && drawer?.classList.contains("open")){
+  const focusables=[...drawer.querySelectorAll("a[href],button:not([disabled]),select,input")];
+  if(!focusables.length)return;
+  const first=focusables[0],last=focusables[focusables.length-1];
+  if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
+ }
+});
 document.querySelectorAll(".drawer-link").forEach(a=>a.addEventListener("click",closeDrawer));
-function setTheme(theme){document.documentElement.dataset.theme=theme;localStorage.setItem("forge-theme",theme)}
-const saved=localStorage.getItem("forge-theme"); if(saved)setTheme(saved);
+function setTheme(theme){document.documentElement.dataset.theme=theme;localStorage.setItem("ui-areena-theme",theme)}
+const saved=localStorage.getItem("ui-areena-theme"); if(saved)setTheme(saved);
 document.querySelectorAll("[data-theme-choice]").forEach(b=>b.addEventListener("click",()=>setTheme(b.dataset.themeChoice)));
 const modal=document.querySelector(".modal");
 function openModal(){modal?.classList.add("open");document.body.style.overflow="hidden"}

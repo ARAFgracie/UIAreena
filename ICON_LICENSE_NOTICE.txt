@@ -1,0 +1,9 @@
+UI Areena Icon Notice
+
+The inline SVG icon artwork in icons.html is based on Font Awesome Free icon definitions.
+Font Awesome is a trademark of Fonticons, Inc.
+
+Font Awesome Free license information:
+https://fontawesome.com/license/free
+
+When redistributing the icon artwork, follow the applicable Font Awesome Free license terms.
