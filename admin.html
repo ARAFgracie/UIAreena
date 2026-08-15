@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
+<title>UI Areena — Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+:root{
+
+--bg:#09090b;
+--panel:#111113;
+--panel2:#18181b;
+--border:rgba(255,255,255,.09);
+
+--text:#f5f5f5;
+--muted:#a1a1aa;
+
+--accent:#8b5cf6;
+--accent2:#6366f1;
+
+--danger:#ef4444;
+--success:#22c55e;
+
+}
+
+body{
+
+font-family:
+Inter,
+system-ui,
+sans-serif;
+
+background:
+radial-gradient(
+circle at 20% 0%,
+rgba(139,92,246,.15),
+transparent 35%
+),
+var(--bg);
+
+color:var(--text);
+
+min-height:100vh;
+
+}
+
+/* =========================
+SIDEBAR
+========================= */
+
+.sidebar{
+
+position:fixed;
+
+left:0;
+top:0;
+
+width:250px;
+height:100vh;
+
+background:
+rgba(17,17,19,.92);
+
+backdrop-filter:blur(20px);
+
+border-right:
+1px solid var(--border);
+
+padding:25px 16px;
+
+z-index:20;
+
+}
+
+.logo{
+
+font-size:22px;
+
+font-weight:800;
+
+letter-spacing:-.8px;
+
+padding:10px 12px 30px;
+
+}
+
+.logo span{
+
+color:#a78bfa;
+
+}
+
+.menu{
+
+display:flex;
+
+flex-direction:column;
+
+gap:6px;
+
+}
+
+.menu button{
+
+border:0;
+
+background:transparent;
+
+color:var(--muted);
+
+padding:12px 14px;
+
+border-radius:12px;
+
+text-align:left;
+
+font-size:14px;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.menu button:hover{
+
+background:
+rgba(255,255,255,.06);
+
+color:white;
+
+}
+
+.menu button.active{
+
+background:
+linear-gradient(
+135deg,
+rgba(139,92,246,.22),
+rgba(99,102,241,.12)
+);
+
+color:white;
+
+}
+
+/* =========================
+MAIN
+========================= */
+
+.main{
+
+margin-left:250px;
+
+padding:30px;
+
+}
+
+.topbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+gap:20px;
+
+margin-bottom:30px;
+
+}
+
+.page-title h1{
+
+font-size:28px;
+
+letter-spacing:-1px;
+
+}
+
+.page-title p{
+
+color:var(--muted);
+
+font-size:14px;
+
+margin-top:5px;
+
+}
+
+.add-btn{
+
+border:0;
+
+background:
+linear-gradient(
+135deg,
+var(--accent),
+var(--accent2)
+);
+
+color:white;
+
+padding:12px 18px;
+
+border-radius:12px;
+
+font-weight:700;
+
+cursor:pointer;
+
+box-shadow:
+0 10px 30px
+rgba(99,102,241,.22);
+
+}
+
+/* =========================
+STATS
+========================= */
+
+.stats{
+
+display:grid;
+
+grid-template-columns:
+repeat(4,1fr);
+
+gap:15px;
+
+margin-bottom:25px;
+
+}
+
+.stat{
+
+background:
+linear-gradient(
+145deg,
+rgba(255,255,255,.045),
+rgba(255,255,255,.015)
+);
+
+border:1px solid var(--border);
+
+border-radius:18px;
+
+padding:20px;
+
+}
+
+.stat-label{
+
+font-size:13px;
+
+color:var(--muted);
+
+}
+
+.stat-value{
+
+font-size:28px;
+
+font-weight:800;
+
+margin-top:8px;
+
+}
+
+/* =========================
+CONTENT
+========================= */
+
+.toolbar{
+
+display:flex;
+
+gap:10px;
+
+margin-bottom:18px;
+
+}
+
+.search{
+
+flex:1;
+
+background:
+var(--panel);
+
+border:1px solid var(--border);
+
+color:white;
+
+padding:13px 16px;
+
+border-radius:12px;
+
+outline:none;
+
+}
+
+.search:focus{
+
+border-color:
+rgba(139,92,246,.6);
+
+}
+
+.filter{
+
+background:
+var(--panel);
+
+color:white;
+
+border:1px solid var(--border);
+
+border-radius:12px;
+
+padding:0 14px;
+
+}
+
+/* =========================
+TABLE
+========================= */
+
+.table-wrap{
+
+background:
+rgba(17,17,19,.8);
+
+border:
+1px solid var(--border);
+
+border-radius:18px;
+
+overflow:hidden;
+
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+th{
+
+text-align:left;
+
+font-size:12px;
+
+color:var(--muted);
+
+font-weight:600;
+
+padding:15px;
+
+background:
+rgba(255,255,255,.025);
+
+}
+
+td{
+
+padding:15px;
+
+border-top:
+1px solid var(--border);
+
+font-size:14px;
+
+}
+
+.preview{
+
+width:110px;
+
+height:55px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+overflow:hidden;
+
+border-radius:10px;
+
+background:white;
+
+}
+
+.status{
+
+display:inline-flex;
+
+padding:5px 9px;
+
+border-radius:20px;
+
+font-size:11px;
+
+font-weight:700;
+
+}
+
+.status.live{
+
+background:
+rgba(34,197,94,.12);
+
+color:#4ade80;
+
+}
+
+.status.draft{
+
+background:
+rgba(245,158,11,.12);
+
+color:#fbbf24;
+
+}
+
+.actions{
+
+display:flex;
+
+gap:6px;
+
+}
+
+.action{
+
+border:1px solid var(--border);
+
+background:
+rgba(255,255,255,.04);
+
+color:white;
+
+padding:7px 10px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+.action:hover{
+
+background:
+rgba(255,255,255,.1);
+
+}
+
+.action.delete{
+
+color:#f87171;
+
+}
+
+/* =========================
+MODAL
+========================= */
+
+.modal{
+
+position:fixed;
+
+inset:0;
+
+background:
+rgba(0,0,0,.72);
+
+backdrop-filter:blur(10px);
+
+display:none;
+
+align-items:center;
+
+justify-content:center;
+
+z-index:100;
+
+padding:20px;
+
+}
+
+.modal.open{
+
+display:flex;
+
+}
+
+.modal-box{
+
+width:min(900px,100%);
+
+max-height:90vh;
+
+overflow:auto;
+
+background:
+#111113;
+
+border:
+1px solid var(--border);
+
+border-radius:22px;
+
+padding:25px;
+
+box-shadow:
+0 30px 100px
+rgba(0,0,0,.5);
+
+}
+
+.modal-head{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:25px;
+
+}
+
+.close{
+
+background:transparent;
+
+border:0;
+
+color:white;
+
+font-size:24px;
+
+cursor:pointer;
+
+}
+
+.form-grid{
+
+display:grid;
+
+grid-template-columns:
+1fr 1fr;
+
+gap:15px;
+
+}
+
+.field{
+
+display:flex;
+
+flex-direction:column;
+
+gap:7px;
+
+}
+
+.field.full{
+
+grid-column:
+1/-1;
+
+}
+
+.field label{
+
+font-size:12px;
+
+color:var(--muted);
+
+}
+
+.field input,
+.field textarea,
+.field select{
+
+width:100%;
+
+background:
+#09090b;
+
+border:1px solid var(--border);
+
+color:white;
+
+border-radius:10px;
+
+padding:12px;
+
+outline:none;
+
+font-family:inherit;
+
+}
+
+.field textarea{
+
+min-height:140px;
+
+resize:vertical;
+
+}
+
+.field input:focus,
+.field textarea:focus{
+
+border-color:
+rgba(139,92,246,.7);
+
+}
+
+.modal-footer{
+
+display:flex;
+
+justify-content:flex-end;
+
+gap:10px;
+
+margin-top:22px;
+
+}
+
+.cancel{
+
+background:
+rgba(255,255,255,.06);
+
+color:white;
+
+border:1px solid var(--border);
+
+padding:11px 18px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+}
+
+.save{
+
+background:
+linear-gradient(
+135deg,
+var(--accent),
+var(--accent2)
+);
+
+color:white;
+
+border:0;
+
+padding:11px 20px;
+
+border-radius:10px;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+/* =========================
+EMPTY
+========================= */
+
+.empty{
+
+padding:60px 20px;
+
+text-align:center;
+
+color:var(--muted);
+
+}
+
+.empty strong{
+
+display:block;
+
+color:white;
+
+font-size:18px;
+
+margin-bottom:5px;
+
+}
+
+/* =========================
+MOBILE
+========================= */
+
+@media(max-width:900px){
+
+.sidebar{
+
+width:210px;
+
+}
+
+.main{
+
+margin-left:210px;
+
+}
+
+.stats{
+
+grid-template-columns:
+repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:650px){
+
+.sidebar{
+
+position:relative;
+
+width:100%;
+
+height:auto;
+
+border-right:0;
+
+border-bottom:
+1px solid var(--border);
+
+}
+
+.main{
+
+margin-left:0;
+
+padding:18px;
+
+}
+
+.menu{
+
+display:grid;
+
+grid-template-columns:
+repeat(2,1fr);
+
+}
+
+.topbar{
+
+align-items:flex-start;
+
+flex-direction:column;
+
+}
+
+.stats{
+
+grid-template-columns:1fr 1fr;
+
+}
+
+.table-wrap{
+
+overflow-x:auto;
+
+}
+
+table{
+
+min-width:750px;
+
+}
+
+.form-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.field.full{
+
+grid-column:auto;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+UI <span>Areena</span>
+
+</div>
+
+<nav class="menu">
+
+<button
+class="active"
+data-category="all"
+>
+Dashboard
+</button>
+
+<button data-category="buttons">
+Buttons
+</button>
+
+<button data-category="navbar">
+Navbars
+</button>
+
+<button data-category="forms">
+Forms
+</button>
+
+<button data-category="cards">
+Cards
+</button>
+
+<button data-category="ui-library">
+UI Library
+</button>
+
+<button data-category="icons">
+Icons
+</button>
+
+<button data-category="prompts">
+Prompts
+</button>
+
+<button data-category="architecture">
+Architecture
+</button>
+
+</nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+<div class="topbar">
+
+<div class="page-title">
+
+<h1 id="pageTitle">
+Dashboard
+</h1>
+
+<p>
+Manage everything inside UI Areena.
+</p>
+
+</div>
+
+<button
+class="add-btn"
+id="addButton"
+>
++ Add New
+</button>
+
+</div>
+
+
+<!-- STATS -->
+
+<section class="stats">
+
+<div class="stat">
+
+<div class="stat-label">
+Total UI
+</div>
+
+<div
+class="stat-value"
+id="totalUI"
+>
+0
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-label">
+Published
+</div>
+
+<div
+class="stat-value"
+id="publishedUI"
+>
+0
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-label">
+Featured
+</div>
+
+<div
+class="stat-value"
+id="featuredUI"
+>
+0
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-label">
+Copies
+</div>
+
+<div
+class="stat-value"
+id="totalCopies"
+>
+0
+</div>
+
+</div>
+
+</section>
+
+
+<!-- TOOLBAR -->
+
+<div class="toolbar">
+
+<input
+class="search"
+id="search"
+placeholder="Search UI..."
+>
+
+<select
+class="filter"
+id="categoryFilter"
+>
+
+<option value="all">
+All categories
+</option>
+
+<option value="buttons">
+Buttons
+</option>
+
+<option value="navbar">
+Navbars
+</option>
+
+<option value="forms">
+Forms
+</option>
+
+<option value="cards">
+Cards
+</option>
+
+<option value="ui-library">
+UI Library
+</option>
+
+</select>
+
+</div>
+
+
+<!-- TABLE -->
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Preview</th>
+
+<th>Name</th>
+
+<th>Category</th>
+
+<th>Status</th>
+
+<th>Views</th>
+
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="uiTable">
+
+</tbody>
+
+</table>
+
+<div
+class="empty"
+id="emptyState"
+style="display:none"
+>
+
+<strong>
+No UI found
+</strong>
+
+Try another search or add a new component.
+
+</div>
+
+</div>
+
+</main>
+
+
+<!-- MODAL -->
+
+<div
+class="modal"
+id="modal"
+>
+
+<div class="modal-box">
+
+<div class="modal-head">
+
+<h2 id="modalTitle">
+Add UI
+</h2>
+
+<button
+class="close"
+id="closeModal"
+>
+×
+</button>
+
+</div>
+
+
+<form id="uiForm">
+
+<input
+type="hidden"
+id="editId"
+>
+
+
+<div class="form-grid">
+
+
+<div class="field">
+
+<label>
+Title
+</label>
+
+<input
+id="title"
+required
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Slug
+</label>
+
+<input
+id="slug"
+required
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Category
+</label>
+
+<select
+id="category"
+required
+>
+
+<option value="buttons">
+Buttons
+</option>
+
+<option value="navbar">
+Navbar
+</option>
+
+<option value="forms">
+Forms
+</option>
+
+<option value="cards">
+Cards
+</option>
+
+<option value="ui-library">
+UI Library
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Subtype
+</label>
+
+<input
+id="subtype"
+>
+
+</div>
+
+
+<div class="field full">
+
+<label>
+Description
+</label>
+
+<input
+id="description"
+>
+
+</div>
+
+
+<div class="field full">
+
+<label>
+Preview HTML
+</label>
+
+<textarea
+id="previewHtml"
+></textarea>
+
+</div>
+
+
+<div class="field">
+
+<label>
+CSS</label>
+
+<textarea
+id="cssCode"
+></textarea>
+
+</div>
+
+
+<div class="field">
+
+<label>
+JavaScript
+</label>
+
+<textarea
+id="jsCode"
+></textarea>
+
+</div>
+
+
+<div class="field full">
+
+<label>
+Full Code
+</label>
+
+<textarea
+id="fullCode"
+></textarea>
+
+</div>
+
+
+</div>
+
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="cancel"
+id="cancelModal"
+>
+Cancel
+</button>
+
+<button
+type="submit"
+class="save"
+>
+Save UI
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================
+SUPABASE CONFIG
+===================================== */
+
+const SUPABASE_URL =
+"https://olqfwgbrgpywqkxcbjlt.supabase.co";
+
+/*
+Replace this with your publishable/anon key.
+NEVER use service_role or secret key here.
+*/
+
+const SUPABASE_KEY =
+"YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+const db =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* =====================================
+STATE
+===================================== */
+
+let allItems = [];
+
+let currentCategory = "all";
+
+let editingId = null;
+
+
+/* =====================================
+AUTH CHECK
+===================================== */
+
+async function checkAdmin(){
+
+const {
+data
+} =
+await db.auth.getUser();
+
+if(!data.user){
+
+location.href =
+"login.html";
+
+return null;
+
+}
+
+const {
+data:admin
+} =
+await db
+.from("admin_users")
+.select("role")
+.eq("user_id",data.user.id)
+.maybeSingle();
+
+if(!admin){
+
+document.body.innerHTML = `
+
+<div style="
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:system-ui;
+background:#09090b;
+color:white;
+text-align:center;
+padding:20px;
+">
+
+<div>
+
+<h1>
+Access denied
+</h1>
+
+<p style="
+color:#a1a1aa;
+margin-top:8px;
+">
+
+You are not an authorized UI Areena administrator.
+
+</p>
+
+</div>
+
+</div>
+
+`;
+
+return null;
+
+}
+
+return data.user;
+
+}
+
+
+/* =====================================
+LOAD DATA
+===================================== */
+
+async function loadItems(){
+
+const {
+data,
+error
+} =
+await db
+.from("ui_items")
+.select("*")
+.order("sort_order",{ascending:true})
+.order("created_at",{ascending:false});
+
+if(error){
+
+console.error(error);
+
+return;
+
+}
+
+allItems =
+data || [];
+
+render();
+
+updateStats();
+
+}
+
+
+/* =====================================
+RENDER
+===================================== */
+
+function render(){
+
+const tbody =
+document.getElementById("uiTable");
+
+const empty =
+document.getElementById("emptyState");
+
+const search =
+document.getElementById("search")
+.value
+.toLowerCase();
+
+const filter =
+document.getElementById("categoryFilter")
+.value;
+
+
+let items =
+allItems.filter(item=>{
+
+const matchesSearch =
+(item.title || "")
+.toLowerCase()
+.includes(search);
+
+const matchesCategory =
+filter === "all" ||
+item.category === filter;
+
+return matchesSearch &&
+matchesCategory;
+
+});
+
+
+tbody.innerHTML = "";
+
+if(!items.length){
+
+empty.style.display =
+"block";
+
+return;
+
+}
+
+empty.style.display =
+"none";
+
+
+items.forEach(item=>{
+
+const row =
+document.createElement("tr");
+
+
+row.innerHTML = `
+
+<td>
+
+<div class="preview">
+
+${item.preview_html || ""}
+
+</div>
+
+</td>
+
+<td>
+
+<strong>
+${escapeHTML(item.title)}
+</strong>
+
+</td>
+
+<td>
+
+${escapeHTML(item.category)}
+
+</td>
+
+<td>
+
+<span class="status ${
+item.is_published
+? "live"
+: "draft"
+}">
+
+${
+item.is_published
+? "Published"
+: "Draft"
+}
+
+</span>
+
+</td>
+
+<td>
+
+${item.views || 0}
+
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="action"
+onclick="editUI('${item.id}')"
+>
+Edit
+</button>
+
+<button
+class="action"
+onclick="duplicateUI('${item.id}')"
+>
+Clone
+</button>
+
+<button
+class="action delete"
+onclick="deleteUI('${item.id}')"
+>
+Delete
+</button>
+
+</div>
+
+</td>
+
+`;
+
+tbody.appendChild(row);
+
+});
+
+}
+
+
+/* =====================================
+STATS
+===================================== */
+
+function updateStats(){
+
+document.getElementById(
+"totalUI"
+).textContent =
+allItems.length;
+
+document.getElementById(
+"publishedUI"
+).textContent =
+allItems.filter(
+x=>x.is_published
+).length;
+
+document.getElementById(
+"featuredUI"
+).textContent =
+allItems.filter(
+x=>x.is_featured
+).length;
+
+document.getElementById(
+"totalCopies"
+).textContent =
+allItems.reduce(
+(sum,x)=>
+sum+(x.copies||0),
+0
+);
+
+}
+
+
+/* =====================================
+ADD
+===================================== */
+
+function openAdd(){
+
+editingId = null;
+
+document.getElementById(
+"modalTitle"
+).textContent =
+"Add UI";
+
+document.getElementById(
+"uiForm"
+).reset();
+
+document.getElementById(
+"editId"
+).value = "";
+
+document.getElementById(
+"modal"
+).classList.add("open");
+
+}
+
+
+/* =====================================
+EDIT
+===================================== */
+
+window.editUI =
+function(id){
+
+const item =
+allItems.find(
+x=>x.id===id
+);
+
+if(!item)return;
+
+editingId = id;
+
+document.getElementById(
+"modalTitle"
+).textContent =
+"Edit UI";
+
+
+document.getElementById(
+"title"
+).value =
+item.title || "";
+
+
+document.getElementById(
+"slug"
+).value =
+item.slug || "";
+
+
+document.getElementById(
+"category"
+).value =
+item.category || "buttons";
+
+
+document.getElementById(
+"subtype"
+).value =
+item.subtype || "";
+
+
+document.getElementById(
+"description"
+).value =
+item.description || "";
+
+
+document.getElementById(
+"previewHtml"
+).value =
+item.preview_html || "";
+
+
+document.getElementById(
+"cssCode"
+).value =
+item.css_code || "";
+
+
+document.getElementById(
+"jsCode"
+).value =
+item.js_code || "";
+
+
+document.getElementById(
+"fullCode"
+).value =
+item.full_code || "";
+
+
+document.getElementById(
+"modal"
+).classList.add("open");
+
+};
+
+
+/* =====================================
+SAVE
+===================================== */
+
+document.getElementById(
+"uiForm"
+)
+.addEventListener(
+"submit",
+async e=>{
+
+e.preventDefault();
+
+
+const payload = {
+
+title:
+document.getElementById(
+"title"
+).value.trim(),
+
+slug:
+document.getElementById(
+"slug"
+).value.trim(),
+
+category:
+document.getElementById(
+"category"
+).value,
+
+subtype:
+document.getElementById(
+"subtype"
+).value.trim(),
+
+description:
+document.getElementById(
+"description"
+).value.trim(),
+
+preview_html:
+document.getElementById(
+"previewHtml"
+).value,
+
+css_code:
+document.getElementById(
+"cssCode"
+).value,
+
+js_code:
+document.getElementById(
+"jsCode"
+).value,
+
+full_code:
+document.getElementById(
+"fullCode"
+).value,
+
+updated_at:
+new Date().toISOString()
+
+};
+
+
+let result;
+
+
+if(editingId){
+
+result =
+await db
+.from("ui_items")
+.update(payload)
+.eq("id",editingId);
+
+}else{
+
+result =
+await db
+.from("ui_items")
+.insert(payload);
+
+}
+
+
+if(result.error){
+
+alert(
+result.error.message
+);
+
+return;
+
+}
+
+
+closeModal();
+
+await loadItems();
+
+}
+);
+
+
+/* =====================================
+DELETE
+===================================== */
+
+window.deleteUI =
+async function(id){
+
+const item =
+allItems.find(
+x=>x.id===id
+);
+
+if(!item)return;
+
+
+const ok =
+confirm(
+`Delete "${item.title}"?`
+);
+
+if(!ok)return;
+
+
+const {
+error
+} =
+await db
+.from("ui_items")
+.delete()
+.eq("id",id);
+
+
+if(error){
+
+alert(
+error.message
+);
+
+return;
+
+}
+
+await loadItems();
+
+};
+
+
+/* =====================================
+DUPLICATE
+===================================== */
+
+window.duplicateUI =
+async function(id){
+
+const item =
+allItems.find(
+x=>x.id===id
+);
+
+if(!item)return;
+
+
+const copy = {
+
+...item,
+
+id:undefined,
+
+title:
+item.title + " Copy",
+
+slug:
+item.slug + "-copy",
+
+created_at:
+undefined,
+
+updated_at:
+undefined
+
+};
+
+
+delete copy.id;
+delete copy.created_at;
+delete copy.updated_at;
+
+
+const {
+error
+} =
+await db
+.from("ui_items")
+.insert(copy);
+
+
+if(error){
+
+alert(
+error.message
+);
+
+return;
+
+}
+
+await loadItems();
+
+};
+
+
+/* =====================================
+MODAL
+===================================== */
+
+function closeModal(){
+
+document.getElementById(
+"modal"
+).classList.remove("open");
+
+}
+
+
+document.getElementById(
+"addButton"
+)
+.addEventListener(
+"click",
+openAdd
+);
+
+
+document.getElementById(
+"closeModal"
+)
+.addEventListener(
+"click",
+closeModal
+);
+
+
+document.getElementById(
+"cancelModal"
+)
+.addEventListener(
+"click",
+closeModal
+);
+
+
+/* =====================================
+SEARCH
+===================================== */
+
+document.getElementById(
+"search"
+)
+.addEventListener(
+"input",
+render
+);
+
+
+document.getElementById(
+"categoryFilter"
+)
+.addEventListener(
+"change",
+render
+);
+
+
+/* =====================================
+ESCAPE
+===================================== */
+
+function escapeHTML(value){
+
+return String(value)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+
+}
+
+
+/* =====================================
+INIT
+===================================== */
+
+(async()=>{
+
+const user =
+await checkAdmin();
+
+if(user){
+
+await loadItems();
+
+}
+
+})();
+
+</script>
+
+</body>
+</html>
