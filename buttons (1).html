@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Distinct CTA and interaction patterns. Each card is a real button composition, not a recolored duplicate.">
+<title>Buttons — UI Areena</title>
+<style>
+
+:root{--bg:#07090c;--panel:#0f1318;--panel2:#141a20;--text:#f4f7fb;--muted:#8d97a4;--line:rgba(255,255,255,.09);--accent:#b8ff2c;--accent2:#d8ff83;--drawer:#0a0d11;--shadow:0 20px 70px rgba(0,0,0,.28)}
+[data-theme="light"]{--bg:#f3f6f1;--panel:#fff;--panel2:#edf1eb;--text:#11150f;--muted:#687168;--line:rgba(15,25,15,.12);--drawer:#fff;--shadow:0 20px 60px rgba(15,25,15,.12)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 80% -10%,rgba(184,255,44,.10),transparent 35%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.sitebar{position:sticky;top:0;z-index:80;height:74px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,64px)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:-.04em}
+.brandmark{width:20px;height:20px;border-radius:7px;background:linear-gradient(135deg,#b8ff2c,#5df2ff);box-shadow:0 0 24px rgba(184,255,44,.25)}
+.brand small{font-size:12px;color:var(--muted);font-weight:700;margin-left:-6px}
+.menu-btn{width:46px;height:46px;border:1px solid var(--line);border-radius:15px;background:var(--panel);color:var(--text);font-size:20px}
+.drawer{position:fixed;inset:0;z-index:100;pointer-events:none}
+.drawer.open{pointer-events:auto}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.52);opacity:0;transition:.22s}
+.drawer.open .scrim{opacity:1}
+.drawer-panel{position:absolute;right:0;top:0;height:100%;width:min(360px,92vw);background:var(--drawer);border-left:1px solid var(--line);padding:22px;transform:translateX(100%);transition:.25s;box-shadow:var(--shadow);overflow:auto}
+.drawer.open .drawer-panel{transform:none}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.drawer-title{font-weight:900;font-size:18px}
+.close-btn{border:1px solid var(--line);background:var(--panel);color:var(--text);width:40px;height:40px;border-radius:13px}
+.drawer-grid{display:grid;gap:9px}
+.drawer-link{display:flex;align-items:center;justify-content:space-between;padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--panel);font-weight:750}
+.drawer-link span{color:var(--muted);font-size:12px}
+.drawer-section{margin:20px 0 9px;color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.theme-row{display:flex;gap:8px}
+.theme-row button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:12px;border-radius:13px}
+main{max-width:1440px;margin:auto;padding:0 clamp(18px,5vw,64px) 80px}
+.hero{padding:70px 0 30px;max-width:920px}
+.eyebrow{font-size:11px;letter-spacing:.18em;color:var(--accent);font-weight:900;text-transform:uppercase}
+h1{font-size:clamp(46px,7vw,92px);line-height:.92;letter-spacing:-.075em;margin:14px 0 22px}
+.hero p{max-width:760px;color:var(--muted);font-size:16px;line-height:1.7}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.pill{padding:8px 11px;border:1px solid var(--line);background:var(--panel);border-radius:999px;color:var(--muted);font-size:12px}
+.search{position:sticky;top:84px;z-index:40;margin:16px 0 26px}
+.search input{width:100%;padding:16px 18px;border-radius:17px;border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--text);outline:none}
+.search input:focus{border-color:color-mix(in srgb,var(--accent) 65%,var(--line))}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{min-width:0;border:1px solid var(--line);border-radius:24px;background:linear-gradient(180deg,color-mix(in srgb,var(--panel2) 96%,transparent),var(--panel));overflow:hidden;box-shadow:0 14px 50px rgba(0,0,0,.12)}
+.preview{min-height:220px;padding:22px;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--accent) 9%,transparent),transparent 55%),color-mix(in srgb,var(--panel) 86%,transparent);border-bottom:1px solid var(--line);--radius:16px;--accent:#b8ff2c;--accent2:#d8ff83}
+.preview>*{max-width:100%}
+.card-info{padding:17px}
+.kicker{font-size:10px;letter-spacing:.15em;color:var(--muted);font-weight:900;text-transform:uppercase}
+.card h3{font-size:17px;margin:8px 0 7px;letter-spacing:-.025em}
+.card p{margin:0;color:var(--muted);font-size:12px;line-height:1.55;min-height:38px}
+.controls{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:15px}
+.control{min-width:0;position:relative}
+.control select{width:100%;height:40px;padding:0 10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:13px;outline:none;font-size:12px}
+.code-btn{height:40px;border:0;border-radius:13px;background:var(--accent);color:#071006;font-weight:950;padding:0 15px}
+.code-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.empty{padding:60px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:20px}
+.modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.68);backdrop-filter:blur(12px)}
+.modal.open{display:flex}
+.modal-box{width:min(1000px,100%);max-height:90vh;overflow:auto;background:var(--drawer);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+.modal-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line);background:var(--drawer)}
+.modal-title{font-weight:900}
+.modal-actions{display:flex;gap:8px}
+.modal-actions button{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px 13px;border-radius:12px;font-weight:800}
+.modal-body{padding:18px}
+.code-label{font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin:14px 0 7px}
+pre{margin:0;white-space:pre-wrap;word-break:break-word;background:#07090c;color:#dce7d7;border:1px solid var(--line);border-radius:15px;padding:16px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+[data-theme="light"] pre{background:#10130f;color:#e9f1e5}
+.toast{position:fixed;left:50%;bottom:22px;z-index:200;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--text);color:var(--bg);padding:11px 15px;border-radius:999px;font-size:12px;font-weight:900;transition:.22s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.sitebar{height:68px;padding:0 16px}.hero{padding-top:48px}h1{font-size:clamp(44px,14vw,70px)}.preview{min-height:190px;padding:14px}.card-info{padding:14px}.controls{grid-template-columns:1fr 1fr}.code-btn{grid-column:1/-1;width:100%}.search{top:78px}}
+@media(max-width:470px){.grid{grid-template-columns:1fr}.preview{min-height:210px}.controls{grid-template-columns:1fr 1fr}.hero p{font-size:14px}}
+
+.library-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.preview-stage{min-height:225px;padding:16px;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 60%),var(--panel2);border-bottom:1px solid var(--line);overflow:hidden}
+.preview-stage .forge-snippet{width:100%;max-width:100%;}
+.preview-stage .forge-snippet > *{max-width:100%;}
+@media(max-width:1050px){.library-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:470px){.library-grid{grid-template-columns:1fr}}
+body.drawer-open{overflow:hidden!important;touch-action:none}
+.drawer{overscroll-behavior:contain}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}.forge-snippet{width:100%;height:100%;display:flex;align-items:center;justify-content:center;contain:content;isolation:isolate}
+</style>
+</head>
+<body>
+<header class="sitebar">
+  <a class="brand" href="index.html"><span class="brandmark"></span><span>UI Areena</span><small>/UI</small></a>
+  <button class="menu-btn" aria-label="Open navigation">•••</button>
+</header>
+
+<div class="drawer" aria-hidden="true">
+ <div class="scrim"></div>
+ <aside class="drawer-panel" aria-label="Site navigation">
+  <div class="drawer-head"><div class="drawer-title">UI Areena / UI</div><button class="close-btn" aria-label="Close">×</button></div>
+  <div class="drawer-section">Library</div><div class="drawer-grid"><a class="drawer-link" href="index.html"><span>Home</span><span>01</span></a>
+<a class="drawer-link" href="buttons.html"><span>Buttons</span><span>40+</span></a>
+<a class="drawer-link" href="navbar.html"><span>Navbars</span><span>39+</span></a>
+<a class="drawer-link" href="forms.html"><span>Forms</span><span>32+</span></a>
+<a class="drawer-link" href="cards.html"><span>Cards</span><span>38+</span></a>
+<a class="drawer-link" href="ui-library.html"><span>UI Library</span><span>46+</span></a>
+<a class="drawer-link" href="icons.html"><span>Icons</span><span>320+</span></a>
+<a class="drawer-link" href="architecture.html"><span>Architecture</span><span>30+</span></a>
+<a class="drawer-link" href="prompts.html"><span>Prompts</span><span>34+</span></a></div>
+  <div class="drawer-section">Appearance</div>
+  <div class="theme-row"><button data-theme-choice="dark">Dark</button><button data-theme-choice="light">Light</button></div>
+ </aside>
+</div>
+
+<main>
+<section class="hero">
+  <div class="eyebrow">BUTTON IDEAS</div>
+  <h1>Buttons</h1>
+  <p>Distinct CTA and interaction patterns. Each card is a real button composition, not a recolored duplicate.</p>
+  <div class="meta-row"><span class="pill">40+ unique concepts</span><span class="pill">Live preview</span><span class="pill">Standalone code</span><span class="pill">No backend</span></div>
+</section>
+<div class="search"><input id="library-search" placeholder="Search this library..." autocomplete="off"></div>
+<section class="library-grid" id="library-grid"></section>
+<div class="empty" id="empty" hidden>No matching concepts. Try another search.</div>
+</main>
+
+<div class="modal" aria-hidden="true">
+ <section class="modal-box" role="dialog" aria-modal="true">
+  <header class="modal-head"><div class="modal-title">Code</div><div class="modal-actions"><button id="copy-all">Copy all</button><button onclick="closeModal()">Close</button></div></header>
+  <div class="modal-body">
+   <div class="code-label">Standalone code</div><pre id="code-html"></pre>
+   <div class="code-label">CSS</div><pre id="code-css"></pre>
+   <div class="code-label">JavaScript</div><pre id="code-js"></pre>
+  </div>
+ </section>
+</div><div class="toast"></div>
+
+<script>
+
+const navItems=[["Home","index.html","01"],["Buttons","buttons.html","40+"],["Navbars","navbar.html","39+"],["Forms","forms.html","32+"],["Cards","cards.html","38+"],["UI Library","ui-library.html","46+"],["Icons","icons.html","320+"],["Architecture","architecture.html","30+"],["Prompts","prompts.html","34+"]];
+const drawer=document.querySelector(".drawer");
+function openDrawer(){
+ const btn=document.querySelector(".menu-btn");
+ drawer?.classList.add("open"); document.body.classList.add("drawer-open");
+ drawer?.setAttribute("aria-hidden","false"); btn?.setAttribute("aria-expanded","true");
+ drawer?.querySelector("a,button")?.focus({preventScroll:true});
+}
+function closeDrawer(){
+ const btn=document.querySelector(".menu-btn");
+ drawer?.classList.remove("open"); document.body.classList.remove("drawer-open");
+ drawer?.setAttribute("aria-hidden","true"); btn?.setAttribute("aria-expanded","false");
+ if(document.activeElement?.closest(".drawer")) btn?.focus({preventScroll:true});
+}
+document.querySelector(".menu-btn")?.setAttribute("aria-expanded","false");
+document.querySelector(".menu-btn")?.addEventListener("click",()=>drawer?.classList.contains("open")?closeDrawer():openDrawer());
+document.querySelector(".close-btn")?.addEventListener("click",closeDrawer);
+document.querySelector(".scrim")?.addEventListener("click",closeDrawer);
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"){closeDrawer(); if(typeof closeModal==="function") closeModal();}
+ if(e.key==="Tab" && drawer?.classList.contains("open")){
+  const focusables=[...drawer.querySelectorAll("a[href],button:not([disabled]),select,input")];
+  if(!focusables.length)return;
+  const first=focusables[0],last=focusables[focusables.length-1];
+  if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
+ }
+});
+document.querySelectorAll(".drawer-link").forEach(a=>a.addEventListener("click",closeDrawer));
+function setTheme(theme){document.documentElement.dataset.theme=theme;localStorage.setItem("ui-areena-theme",theme)}
+const saved=localStorage.getItem("ui-areena-theme"); if(saved)setTheme(saved);
+document.querySelectorAll("[data-theme-choice]").forEach(b=>b.addEventListener("click",()=>setTheme(b.dataset.themeChoice)));
+const modal=document.querySelector(".modal");
+function openModal(){modal?.classList.add("open");document.body.style.overflow="hidden"}
+function closeModal(){modal?.classList.remove("open");if(!drawer?.classList.contains("open"))document.body.style.overflow=""}
+document.querySelector(".modal")?.addEventListener("click",e=>{if(e.target===modal)closeModal()});
+let currentCode="";
+function showCode(title,code){
+ currentCode=code;
+ document.querySelector(".modal-title").textContent=title;
+ document.querySelector("#code-html").textContent=code;
+ document.querySelector("#code-css").textContent="Included inside the standalone snippet above.";
+ document.querySelector("#code-js").textContent="No external dependency.";
+ openModal();
+}
+document.querySelector("#copy-all")?.addEventListener("click",async()=>{
+ try{await navigator.clipboard.writeText(currentCode);toast("Code copied")}
+ catch(e){const ta=document.createElement("textarea");ta.value=currentCode;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("Code copied")}
+});
+function toast(msg){const t=document.querySelector(".toast");if(!t)return;t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),1600)}
+
+const ITEMS=[{"id": "but-001", "name": "Magnetic Arrow", "preview": "<button class=\"b magnetic\">Start building <span>↗</span></button>", "css": ".b{position:relative;border:0;border-radius:var(--radius);padding:13px 18px;background:var(--accent);color:#071006;font-weight:950;overflow:hidden}.b span{margin-left:9px}.b:hover{transform:translateY(-2px);box-shadow:0 10px 25px color-mix(in srgb,var(--accent) 30%,transparent)}", "code": "<style>:root{--accent:#b8ff2c;--radius:18px;}\\n.b{position:relative;border:0;border-radius:var(--radius);padding:13px 18px;background:var(--accent);color:#071006;font-weight:950;overflow:hidden}.b span{margin-left:9px}.b:hover{transform:translateY(-2px);box-shadow:0 10px 25px color-mix(in srgb,var(--accent) 30%,transparent)}\\n</style>\\n<button class=\"b magnetic\">Start building <span>↗</span></button>", "accent": "#b8ff2c", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-002", "name": "Split Label", "preview": "<button class=\"b split\"><span>Explore</span><b>→</b></button>", "css": ".b{display:flex;align-items:stretch;border:1px solid #313b45;border-radius:var(--radius);overflow:hidden;background:#151b21;color:#e8edf2}.b span{padding:12px 15px}.b b{display:grid;place-items:center;padding:0 12px;background:var(--accent);color:#071006}", "code": "<style>:root{--accent:#62f2d0;--radius:18px;}\\n.b{display:flex;align-items:stretch;border:1px solid #313b45;border-radius:var(--radius);overflow:hidden;background:#151b21;color:#e8edf2}.b span{padding:12px 15px}.b b{display:grid;place-items:center;padding:0 12px;background:var(--accent);color:#071006}\\n</style>\\n<button class=\"b split\"><span>Explore</span><b>→</b></button>", "accent": "#62f2d0", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-003", "name": "Ghost Underline", "preview": "<button class=\"b underline\">Read the story <i>↗</i></button>", "css": ".b{border:0;border-bottom:1px solid var(--accent);background:transparent;color:#e7edf2;padding:9px 2px;font-weight:800}.b i{font-style:normal;color:var(--accent);margin-left:6px}", "code": "<style>:root{--accent:#8e7cff;--radius:18px;}\\n.b{border:0;border-bottom:1px solid var(--accent);background:transparent;color:#e7edf2;padding:9px 2px;font-weight:800}.b i{font-style:normal;color:var(--accent);margin-left:6px}\\n</style>\\n<button class=\"b underline\">Read the story <i>↗</i></button>", "accent": "#8e7cff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-004", "name": "Glow Capsule", "preview": "<button class=\"b glow\">Get started</button>", "css": ".b{border:1px solid var(--accent);border-radius:var(--radius);background:color-mix(in srgb,var(--accent) 10%,#11161b);color:var(--accent);padding:12px 20px;font-weight:900;box-shadow:0 0 26px color-mix(in srgb,var(--accent) 25%,transparent)}", "code": "<style>:root{--accent:#ff6fae;--radius:18px;}\\n.b{border:1px solid var(--accent);border-radius:var(--radius);background:color-mix(in srgb,var(--accent) 10%,#11161b);color:var(--accent);padding:12px 20px;font-weight:900;box-shadow:0 0 26px color-mix(in srgb,var(--accent) 25%,transparent)}\\n</style>\\n<button class=\"b glow\">Get started</button>", "accent": "#ff6fae", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-005", "name": "Icon Circle", "preview": "<button class=\"b icon\">↗</button>", "css": ".b{width:48px;height:48px;border:0;border-radius:50%;background:var(--accent);color:#071006;font-size:18px;font-weight:950}", "code": "<style>:root{--accent:#4dd8ff;--radius:18px;}\\n.b{width:48px;height:48px;border:0;border-radius:50%;background:var(--accent);color:#071006;font-size:18px;font-weight:950}\\n</style>\\n<button class=\"b icon\">↗</button>", "accent": "#4dd8ff", "shapes": ["Sharp", "Soft", "Rounded", "Circle"]}, {"id": "but-006", "name": "Square Icon", "preview": "<button class=\"b icon\">＋</button>", "css": ".b{width:48px;height:48px;border:1px solid #39434e;border-radius:var(--radius);background:#161d24;color:var(--accent);font-size:20px}", "code": "<style>:root{--accent:#ffb84d;--radius:18px;}\\n.b{width:48px;height:48px;border:1px solid #39434e;border-radius:var(--radius);background:#161d24;color:var(--accent);font-size:20px}\\n</style>\\n<button class=\"b icon\">＋</button>", "accent": "#ffb84d", "shapes": ["Sharp", "Soft", "Rounded", "Circle"]}, {"id": "but-007", "name": "Loading Button", "preview": "<button class=\"b loading\"><i></i>Processing</button>", "css": ".b{border:0;border-radius:var(--radius);background:#1a2128;color:#dce4ea;padding:12px 18px;display:flex;align-items:center;gap:9px}.b i{width:13px;height:13px;border:2px solid #4b5661;border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}", "code": "<style>:root{--accent:#ff6b6b;--radius:18px;}\\n.b{border:0;border-radius:var(--radius);background:#1a2128;color:#dce4ea;padding:12px 18px;display:flex;align-items:center;gap:9px}.b i{width:13px;height:13px;border:2px solid #4b5661;border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}\\n</style>\\n<button class=\"b loading\"><i></i>Processing</button>", "accent": "#ff6b6b", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-008", "name": "Success State", "preview": "<button class=\"b success\">✓ Saved</button>", "css": ".b{border:0;border-radius:var(--radius);background:var(--accent);color:#071006;padding:12px 18px;font-weight:950}", "code": "<style>:root{--accent:#c6ff5c;--radius:18px;}\\n.b{border:0;border-radius:var(--radius);background:var(--accent);color:#071006;padding:12px 18px;font-weight:950}\\n</style>\\n<button class=\"b success\">✓ Saved</button>", "accent": "#c6ff5c", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-009", "name": "Danger Action", "preview": "<button class=\"b danger\">Delete project</button>", "css": ".b{border:1px solid #ff6b6b;border-radius:var(--radius);background:#2a1517;color:#ff8585;padding:12px 18px;font-weight:900}", "code": "<style>:root{--accent:#d18cff;--radius:18px;}\\n.b{border:1px solid #ff6b6b;border-radius:var(--radius);background:#2a1517;color:#ff8585;padding:12px 18px;font-weight:900}\\n</style>\\n<button class=\"b danger\">Delete project</button>", "accent": "#d18cff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-010", "name": "Soft Secondary", "preview": "<button class=\"b soft\">View details</button>", "css": ".b{border:1px solid #303943;border-radius:var(--radius);background:#181f26;color:#dce4ea;padding:12px 18px;font-weight:850}", "code": "<style>:root{--accent:#ffd166;--radius:18px;}\\n.b{border:1px solid #303943;border-radius:var(--radius);background:#181f26;color:#dce4ea;padding:12px 18px;font-weight:850}\\n</style>\\n<button class=\"b soft\">View details</button>", "accent": "#ffd166", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-011", "name": "Text Button", "preview": "<button class=\"b text\">Skip for now <span>→</span></button>", "css": ".b{border:0;background:transparent;color:#bfc8d1;padding:9px 2px;font-weight:800}.b span{color:var(--accent);margin-left:7px}", "code": "<style>:root{--accent:#b8ff2c;--radius:18px;}\\n.b{border:0;background:transparent;color:#bfc8d1;padding:9px 2px;font-weight:800}.b span{color:var(--accent);margin-left:7px}\\n</style>\\n<button class=\"b text\">Skip for now <span>→</span></button>", "accent": "#b8ff2c", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-012", "name": "Segment Toggle", "preview": "<div class=\"toggle\"><button>Monthly</button><button class=\"on\">Yearly <em>-20%</em></button></div>", "css": ".toggle{display:flex;padding:4px;background:#171d23;border:1px solid #2d3741;border-radius:var(--radius)}.toggle button{border:0;background:transparent;color:#8e99a5;padding:8px 12px;border-radius:var(--radius);font-size:9px}.toggle .on{background:var(--accent);color:#071006;font-weight:900}.toggle em{font-style:normal;font-size:7px;margin-left:4px}", "code": "<style>:root{--accent:#62f2d0;--radius:18px;}\\n.toggle{display:flex;padding:4px;background:#171d23;border:1px solid #2d3741;border-radius:var(--radius)}.toggle button{border:0;background:transparent;color:#8e99a5;padding:8px 12px;border-radius:var(--radius);font-size:9px}.toggle .on{background:var(--accent);color:#071006;font-weight:900}.toggle em{font-style:normal;font-size:7px;margin-left:4px}\\n</style>\\n<div class=\"toggle\"><button>Monthly</button><button class=\"on\">Yearly <em>-20%</em></button></div>", "accent": "#62f2d0", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-013", "name": "Split CTA", "preview": "<button class=\"b cta\"><span>Book a demo</span><i>↗</i></button>", "css": ".b{display:flex;border:1px solid #2e3842;border-radius:var(--radius);overflow:hidden;background:#141a20;color:#e8edf2}.cta span{padding:12px 15px}.cta i{padding:12px 14px;background:var(--accent);color:#071006;font-style:normal;font-weight:900}", "code": "<style>:root{--accent:#8e7cff;--radius:18px;}\\n.b{display:flex;border:1px solid #2e3842;border-radius:var(--radius);overflow:hidden;background:#141a20;color:#e8edf2}.cta span{padding:12px 15px}.cta i{padding:12px 14px;background:var(--accent);color:#071006;font-style:normal;font-weight:900}\\n</style>\\n<button class=\"b cta\"><span>Book a demo</span><i>↗</i></button>", "accent": "#8e7cff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-014", "name": "Bracket Button", "preview": "<button class=\"bracket\">[ Launch ]</button>", "css": ".bracket{border:0;background:transparent;color:var(--accent);padding:10px 14px;font-family:ui-monospace,monospace;font-weight:900}", "code": "<style>:root{--accent:#ff6fae;--radius:18px;}\\n.bracket{border:0;background:transparent;color:var(--accent);padding:10px 14px;font-family:ui-monospace,monospace;font-weight:900}\\n</style>\\n<button class=\"bracket\">[ Launch ]</button>", "accent": "#ff6fae", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-015", "name": "Corner Cut", "preview": "<button class=\"cut\">Explore ↗</button>", "css": ".cut{border:0;color:#071006;background:var(--accent);padding:12px 19px;clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%,5% 50%) ;font-weight:950}", "code": "<style>:root{--accent:#4dd8ff;--radius:18px;}\\n.cut{border:0;color:#071006;background:var(--accent);padding:12px 19px;clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%,5% 50%) ;font-weight:950}\\n</style>\\n<button class=\"cut\">Explore ↗</button>", "accent": "#4dd8ff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-016", "name": "Neon Outline", "preview": "<button class=\"neon\">ENTER SYSTEM</button>", "css": ".neon{border:1px solid var(--accent);background:transparent;color:var(--accent);padding:11px 16px;border-radius:var(--radius);font:800 9px ui-monospace;box-shadow:inset 0 0 18px color-mix(in srgb,var(--accent) 8%,transparent),0 0 16px color-mix(in srgb,var(--accent) 14%,transparent)}", "code": "<style>:root{--accent:#ffb84d;--radius:18px;}\\n.neon{border:1px solid var(--accent);background:transparent;color:var(--accent);padding:11px 16px;border-radius:var(--radius);font:800 9px ui-monospace;box-shadow:inset 0 0 18px color-mix(in srgb,var(--accent) 8%,transparent),0 0 16px color-mix(in srgb,var(--accent) 14%,transparent)}\\n</style>\\n<button class=\"neon\">ENTER SYSTEM</button>", "accent": "#ffb84d", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-017", "name": "Glass Button", "preview": "<button class=\"glass\">Continue <span>→</span></button>", "css": ".glass{border:1px solid #ffffff2a;background:#ffffff0c;color:#f4f7fb;backdrop-filter:blur(12px);padding:12px 17px;border-radius:var(--radius);box-shadow:inset 0 1px #fff2}.glass span{color:var(--accent);margin-left:7px}", "code": "<style>:root{--accent:#ff6b6b;--radius:18px;}\\n.glass{border:1px solid #ffffff2a;background:#ffffff0c;color:#f4f7fb;backdrop-filter:blur(12px);padding:12px 17px;border-radius:var(--radius);box-shadow:inset 0 1px #fff2}.glass span{color:var(--accent);margin-left:7px}\\n</style>\\n<button class=\"glass\">Continue <span>→</span></button>", "accent": "#ff6b6b", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-018", "name": "Gradient Mesh", "preview": "<button class=\"mesh\">Create account</button>", "css": ".mesh{border:0;border-radius:var(--radius);padding:13px 19px;background:linear-gradient(120deg,var(--accent),#65e9ff 48%,#8e7cff);color:#071006;font-weight:950}", "code": "<style>:root{--accent:#c6ff5c;--radius:18px;}\\n.mesh{border:0;border-radius:var(--radius);padding:13px 19px;background:linear-gradient(120deg,var(--accent),#65e9ff 48%,#8e7cff);color:#071006;font-weight:950}\\n</style>\\n<button class=\"mesh\">Create account</button>", "accent": "#c6ff5c", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-019", "name": "Pill Counter", "preview": "<button class=\"counter\">Inbox <b>8</b></button>", "css": ".counter{display:flex;gap:9px;align-items:center;border:1px solid #303943;background:#161d24;color:#dce4ea;padding:10px 13px;border-radius:var(--radius)}.counter b{background:var(--accent);color:#071006;border-radius:var(--radius);padding:3px 6px;font-size:8px}", "code": "<style>:root{--accent:#d18cff;--radius:18px;}\\n.counter{display:flex;gap:9px;align-items:center;border:1px solid #303943;background:#161d24;color:#dce4ea;padding:10px 13px;border-radius:var(--radius)}.counter b{background:var(--accent);color:#071006;border-radius:var(--radius);padding:3px 6px;font-size:8px}\\n</style>\\n<button class=\"counter\">Inbox <b>8</b></button>", "accent": "#d18cff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-020", "name": "Download Rail", "preview": "<button class=\"download\"><span>Download</span><b>↓</b></button>", "css": ".download{display:flex;align-items:center;border:1px solid #303943;border-radius:var(--radius);overflow:hidden;background:#151b21;color:#dce4ea}.download span{padding:11px 15px}.download b{padding:11px 13px;background:var(--accent);color:#071006}", "code": "<style>:root{--accent:#ffd166;--radius:18px;}\\n.download{display:flex;align-items:center;border:1px solid #303943;border-radius:var(--radius);overflow:hidden;background:#151b21;color:#dce4ea}.download span{padding:11px 15px}.download b{padding:11px 13px;background:var(--accent);color:#071006}\\n</style>\\n<button class=\"download\"><span>Download</span><b>↓</b></button>", "accent": "#ffd166", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-021", "name": "Play Button", "preview": "<button class=\"play\">▶</button>", "css": ".play{width:52px;height:52px;border:1px solid #ffffff35;border-radius:50%;background:#ffffff10;color:var(--accent);backdrop-filter:blur(10px);font-size:16px;padding-left:4px}", "code": "<style>:root{--accent:#b8ff2c;--radius:18px;}\\n.play{width:52px;height:52px;border:1px solid #ffffff35;border-radius:50%;background:#ffffff10;color:var(--accent);backdrop-filter:blur(10px);font-size:16px;padding-left:4px}\\n</style>\\n<button class=\"play\">▶</button>", "accent": "#b8ff2c", "shapes": ["Sharp", "Soft", "Rounded", "Circle"]}, {"id": "but-022", "name": "Bookmark Button", "preview": "<button class=\"bookmark\">♡ Save</button>", "css": ".bookmark{border:1px solid #303943;background:#151b21;color:#dce4ea;padding:10px 14px;border-radius:var(--radius);font-weight:800}.bookmark:first-letter{color:var(--accent)}", "code": "<style>:root{--accent:#62f2d0;--radius:18px;}\\n.bookmark{border:1px solid #303943;background:#151b21;color:#dce4ea;padding:10px 14px;border-radius:var(--radius);font-weight:800}.bookmark:first-letter{color:var(--accent)}\\n</style>\\n<button class=\"bookmark\">♡ Save</button>", "accent": "#62f2d0", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-023", "name": "Progress CTA", "preview": "<button class=\"progress\"><span></span><b>Upload</b></button>", "css": ".progress{position:relative;overflow:hidden;border:1px solid #303943;background:#151b21;color:#dce4ea;padding:12px 18px;border-radius:var(--radius);font-weight:900}.progress span{position:absolute;inset:0 auto 0 0;width:58%;background:color-mix(in srgb,var(--accent) 20%,transparent)}.progress b{position:relative}", "code": "<style>:root{--accent:#8e7cff;--radius:18px;}\\n.progress{position:relative;overflow:hidden;border:1px solid #303943;background:#151b21;color:#dce4ea;padding:12px 18px;border-radius:var(--radius);font-weight:900}.progress span{position:absolute;inset:0 auto 0 0;width:58%;background:color-mix(in srgb,var(--accent) 20%,transparent)}.progress b{position:relative}\\n</style>\\n<button class=\"progress\"><span></span><b>Upload</b></button>", "accent": "#8e7cff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-024", "name": "Magnet Tabs", "preview": "<div class=\"tabs\"><button>Overview</button><button class=\"active\">Analytics</button><button>Team</button></div>", "css": ".tabs{display:flex;gap:3px;padding:4px;border:1px solid #303943;background:#12181e;border-radius:var(--radius)}.tabs button{border:0;background:transparent;color:#7f8995;padding:8px 10px;border-radius:calc(var(--radius)*.7);font-size:9px}.tabs .active{background:var(--accent);color:#071006;font-weight:900}", "code": "<style>:root{--accent:#ff6fae;--radius:18px;}\\n.tabs{display:flex;gap:3px;padding:4px;border:1px solid #303943;background:#12181e;border-radius:var(--radius)}.tabs button{border:0;background:transparent;color:#7f8995;padding:8px 10px;border-radius:calc(var(--radius)*.7);font-size:9px}.tabs .active{background:var(--accent);color:#071006;font-weight:900}\\n</style>\\n<div class=\"tabs\"><button>Overview</button><button class=\"active\">Analytics</button><button>Team</button></div>", "accent": "#ff6fae", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-025", "name": "Arrow Reveal", "preview": "<button class=\"reveal\"><span>Explore</span><b>→</b></button>", "css": ".reveal{border:1px solid #303943;background:#151b21;color:#dce4ea;border-radius:var(--radius);padding:11px 13px;display:flex;gap:12px;align-items:center}.reveal b{color:var(--accent);transition:.2s}.reveal:hover b{transform:translateX(5px)}", "code": "<style>:root{--accent:#4dd8ff;--radius:18px;}\\n.reveal{border:1px solid #303943;background:#151b21;color:#dce4ea;border-radius:var(--radius);padding:11px 13px;display:flex;gap:12px;align-items:center}.reveal b{color:var(--accent);transition:.2s}.reveal:hover b{transform:translateX(5px)}\\n</style>\\n<button class=\"reveal\"><span>Explore</span><b>→</b></button>", "accent": "#4dd8ff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-026", "name": "Corner Badge", "preview": "<button class=\"badge\"><span>New</span> Explore</button>", "css": ".badge{position:relative;border:1px solid #303943;background:#151b21;color:#e5ebef;padding:13px 18px;border-radius:var(--radius);font-weight:850}.badge span{position:absolute;right:-7px;top:-9px;background:var(--accent);color:#071006;border-radius:var(--radius);padding:3px 6px;font-size:7px}", "code": "<style>:root{--accent:#ffb84d;--radius:18px;}\\n.badge{position:relative;border:1px solid #303943;background:#151b21;color:#e5ebef;padding:13px 18px;border-radius:var(--radius);font-weight:850}.badge span{position:absolute;right:-7px;top:-9px;background:var(--accent);color:#071006;border-radius:var(--radius);padding:3px 6px;font-size:7px}\\n</style>\\n<button class=\"badge\"><span>New</span> Explore</button>", "accent": "#ffb84d", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-027", "name": "Soft Glow", "preview": "<button class=\"softglow\">Join waitlist</button>", "css": ".softglow{border:1px solid #2d3741;border-radius:var(--radius);background:#172018;color:var(--accent);padding:12px 18px;box-shadow:0 0 30px color-mix(in srgb,var(--accent) 12%,transparent)}", "code": "<style>:root{--accent:#ff6b6b;--radius:18px;}\\n.softglow{border:1px solid #2d3741;border-radius:var(--radius);background:#172018;color:var(--accent);padding:12px 18px;box-shadow:0 0 30px color-mix(in srgb,var(--accent) 12%,transparent)}\\n</style>\\n<button class=\"softglow\">Join waitlist</button>", "accent": "#ff6b6b", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-028", "name": "Monogram", "preview": "<button class=\"mono\">F</button>", "css": ".mono{width:48px;height:48px;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:var(--radius);font-weight:950;font-size:17px}", "code": "<style>:root{--accent:#c6ff5c;--radius:18px;}\\n.mono{width:48px;height:48px;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:var(--radius);font-weight:950;font-size:17px}\\n</style>\\n<button class=\"mono\">F</button>", "accent": "#c6ff5c", "shapes": ["Sharp", "Soft", "Rounded", "Circle"]}, {"id": "but-029", "name": "Command Key", "preview": "<button class=\"cmd\">Open <kbd>⌘ K</kbd></button>", "css": ".cmd{border:1px solid #303943;background:#151b21;color:#dce4ea;border-radius:var(--radius);padding:10px 12px;display:flex;align-items:center;gap:14px}.cmd kbd{border:1px solid #3a444e;border-radius:var(--radius);padding:3px 6px;color:#8d98a4;font-size:8px}", "code": "<style>:root{--accent:#d18cff;--radius:18px;}\\n.cmd{border:1px solid #303943;background:#151b21;color:#dce4ea;border-radius:var(--radius);padding:10px 12px;display:flex;align-items:center;gap:14px}.cmd kbd{border:1px solid #3a444e;border-radius:var(--radius);padding:3px 6px;color:#8d98a4;font-size:8px}\\n</style>\\n<button class=\"cmd\">Open <kbd>⌘ K</kbd></button>", "accent": "#d18cff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-030", "name": "Outline Arrow", "preview": "<button class=\"outline\">Next step <i>→</i></button>", "css": ".outline{border:1px solid var(--accent);background:transparent;color:#dfe7ed;border-radius:var(--radius);padding:11px 16px}.outline i{color:var(--accent);font-style:normal;margin-left:8px}", "code": "<style>:root{--accent:#ffd166;--radius:18px;}\\n.outline{border:1px solid var(--accent);background:transparent;color:#dfe7ed;border-radius:var(--radius);padding:11px 16px}.outline i{color:var(--accent);font-style:normal;margin-left:8px}\\n</style>\\n<button class=\"outline\">Next step <i>→</i></button>", "accent": "#ffd166", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-031", "name": "Status Dot", "preview": "<button class=\"status\"><i></i>All systems operational</button>", "css": ".status{border:0;background:transparent;color:#bfc8d1;padding:10px 0;font-size:9px}.status i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);margin-right:7px}", "code": "<style>:root{--accent:#b8ff2c;--radius:18px;}\\n.status{border:0;background:transparent;color:#bfc8d1;padding:10px 0;font-size:9px}.status i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);margin-right:7px}\\n</style>\\n<button class=\"status\"><i></i>All systems operational</button>", "accent": "#b8ff2c", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-032", "name": "Ticket Stub", "preview": "<button class=\"ticket\"><b>GET PASS</b><i>2026</i></button>", "css": ".ticket{border:0;background:#f0f1ec;color:#10150f;padding:12px 16px;display:flex;gap:15px;align-items:center;clip-path:polygon(0 0,100% 0,100% 38%,96% 50%,100% 62%,100% 100%,0 100%,0 62%,4% 50%,0 38%)}.ticket b{font-size:9px}.ticket i{font-size:8px;color:#657064}", "code": "<style>:root{--accent:#62f2d0;--radius:18px;}\\n.ticket{border:0;background:#f0f1ec;color:#10150f;padding:12px 16px;display:flex;gap:15px;align-items:center;clip-path:polygon(0 0,100% 0,100% 38%,96% 50%,100% 62%,100% 100%,0 100%,0 62%,4% 50%,0 38%)}.ticket b{font-size:9px}.ticket i{font-size:8px;color:#657064}\\n</style>\\n<button class=\"ticket\"><b>GET PASS</b><i>2026</i></button>", "accent": "#62f2d0", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-033", "name": "Cursor Button", "preview": "<button class=\"cursor\">Hover me <span>↗</span></button>", "css": ".cursor{border:0;background:var(--accent);color:#071006;padding:12px 18px;border-radius:var(--radius);font-weight:950;box-shadow:7px 7px 0 #2e3a1a}.cursor span{margin-left:10px}", "code": "<style>:root{--accent:#8e7cff;--radius:18px;}\\n.cursor{border:0;background:var(--accent);color:#071006;padding:12px 18px;border-radius:var(--radius);font-weight:950;box-shadow:7px 7px 0 #2e3a1a}.cursor span{margin-left:10px}\\n</style>\\n<button class=\"cursor\">Hover me <span>↗</span></button>", "accent": "#8e7cff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-034", "name": "Dashed Action", "preview": "<button class=\"dashed\">Add block +</button>", "css": ".dashed{border:1px dashed #4a5662;background:transparent;color:#9aa5b0;border-radius:var(--radius);padding:12px 18px;font-weight:800}", "code": "<style>:root{--accent:#ff6fae;--radius:18px;}\\n.dashed{border:1px dashed #4a5662;background:transparent;color:#9aa5b0;border-radius:var(--radius);padding:12px 18px;font-weight:800}\\n</style>\\n<button class=\"dashed\">Add block +</button>", "accent": "#ff6fae", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-035", "name": "Hollow Capsule", "preview": "<button class=\"hollow\">Learn more</button>", "css": ".hollow{border:2px solid #2d3741;background:transparent;color:#dce4ea;padding:10px 19px;border-radius:var(--radius);font-weight:900}", "code": "<style>:root{--accent:#4dd8ff;--radius:18px;}\\n.hollow{border:2px solid #2d3741;background:transparent;color:#dce4ea;padding:10px 19px;border-radius:var(--radius);font-weight:900}\\n</style>\\n<button class=\"hollow\">Learn more</button>", "accent": "#4dd8ff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-036", "name": "Layered Button", "preview": "<button class=\"layered\">Publish <span>↗</span></button>", "css": ".layered{border:0;background:var(--accent);color:#071006;padding:11px 18px;border-radius:var(--radius);font-weight:950;box-shadow:0 4px 0 #7fae1b,0 7px 18px #0005}.layered span{margin-left:8px}", "code": "<style>:root{--accent:#ffb84d;--radius:18px;}\\n.layered{border:0;background:var(--accent);color:#071006;padding:11px 18px;border-radius:var(--radius);font-weight:950;box-shadow:0 4px 0 #7fae1b,0 7px 18px #0005}.layered span{margin-left:8px}\\n</style>\\n<button class=\"layered\">Publish <span>↗</span></button>", "accent": "#ffb84d", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-037", "name": "Slider Action", "preview": "<button class=\"slider\"><i></i><b>Swipe to confirm</b></button>", "css": ".slider{position:relative;width:190px;border:1px solid #303943;background:#151b21;color:#8d98a4;padding:6px;border-radius:var(--radius);text-align:center}.slider i{position:absolute;left:6px;top:6px;width:30px;height:30px;border-radius:50%;background:var(--accent)}.slider b{font-size:8px}", "code": "<style>:root{--accent:#ff6b6b;--radius:18px;}\\n.slider{position:relative;width:190px;border:1px solid #303943;background:#151b21;color:#8d98a4;padding:6px;border-radius:var(--radius);text-align:center}.slider i{position:absolute;left:6px;top:6px;width:30px;height:30px;border-radius:50%;background:var(--accent)}.slider b{font-size:8px}\\n</style>\\n<button class=\"slider\"><i></i><b>Swipe to confirm</b></button>", "accent": "#ff6b6b", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-038", "name": "Icon Label", "preview": "<button class=\"iconlabel\"><span>＋</span><b>Add integration</b></button>", "css": ".iconlabel{display:flex;align-items:center;gap:8px;border:1px solid #303943;background:#151b21;color:#dce4ea;padding:10px 12px;border-radius:var(--radius)}.iconlabel span{width:24px;height:24px;border-radius:var(--radius);background:var(--accent);color:#071006;display:grid;place-items:center;font-weight:900}.iconlabel b{font-size:9px}", "code": "<style>:root{--accent:#c6ff5c;--radius:18px;}\\n.iconlabel{display:flex;align-items:center;gap:8px;border:1px solid #303943;background:#151b21;color:#dce4ea;padding:10px 12px;border-radius:var(--radius)}.iconlabel span{width:24px;height:24px;border-radius:var(--radius);background:var(--accent);color:#071006;display:grid;place-items:center;font-weight:900}.iconlabel b{font-size:9px}\\n</style>\\n<button class=\"iconlabel\"><span>＋</span><b>Add integration</b></button>", "accent": "#c6ff5c", "shapes": ["Sharp", "Soft", "Rounded", "Circle"]}, {"id": "but-039", "name": "Focus Ring", "preview": "<button class=\"focus\">Focus mode</button>", "css": ".focus{border:1px solid #303943;outline:2px solid color-mix(in srgb,var(--accent) 40%,transparent);outline-offset:4px;background:#151b21;color:#dce4ea;border-radius:var(--radius);padding:11px 17px;font-weight:850}", "code": "<style>:root{--accent:#d18cff;--radius:18px;}\\n.focus{border:1px solid #303943;outline:2px solid color-mix(in srgb,var(--accent) 40%,transparent);outline-offset:4px;background:#151b21;color:#dce4ea;border-radius:var(--radius);padding:11px 17px;font-weight:850}\\n</style>\\n<button class=\"focus\">Focus mode</button>", "accent": "#d18cff", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}, {"id": "but-040", "name": "Ribbon", "preview": "<button class=\"ribbon\"><span>Popular</span> Start free</button>", "css": ".ribbon{position:relative;border:0;background:#171d23;color:#e5ebef;border:1px solid #303943;padding:12px 18px;border-radius:var(--radius);font-weight:900}.ribbon span{position:absolute;left:-8px;top:-9px;background:var(--accent);color:#071006;padding:3px 7px;border-radius:var(--radius);font-size:7px}", "code": "<style>:root{--accent:#ffd166;--radius:18px;}\\n.ribbon{position:relative;border:0;background:#171d23;color:#e5ebef;border:1px solid #303943;padding:12px 18px;border-radius:var(--radius);font-weight:900}.ribbon span{position:absolute;left:-8px;top:-9px;background:var(--accent);color:#071006;padding:3px 7px;border-radius:var(--radius);font-size:7px}\\n</style>\\n<button class=\"ribbon\"><span>Popular</span> Start free</button>", "accent": "#ffd166", "shapes": ["Sharp", "Soft", "Rounded", "Pill"]}];
+const COLOR_MAP={"Lime": "#b8ff2c", "Mint": "#62f2d0", "Violet": "#8e7cff", "Pink": "#ff6fae", "Cyan": "#4dd8ff", "Amber": "#ffb84d", "Coral": "#ff6b6b", "Chartreuse": "#c6ff5c", "Lavender": "#d18cff", "Gold": "#ffd166"};
+const SHAPES={"Sharp": "0px", "Soft": "8px", "Rounded": "18px", "Pill": "999px"};
+const grid=document.getElementById("library-grid");
+const search=document.getElementById("library-search");
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function radiusFor(shape){if(shape==="Circle")return "50%";return SHAPES[shape]||"18px"}
+function itemCard(item,index){
+ const card=document.createElement("article"); card.className="card";
+ card.dataset.search=(item.name+" "+item.id).toLowerCase();
+ card.innerHTML=`<div class="preview-stage" data-preview><div class="forge-snippet" style="--accent:${item.accent};--radius:18px">${item.preview}</div></div>
+ <div class="card-info"><div class="kicker">BUTTONS · ${String(index+1).padStart(3,"0")}</div>
+ <h3>${esc(item.name)}</h3><p>Distinct visual concept with its own structure, responsive treatment and copy-ready source.</p>
+ <div class="controls"><div class="control"><select data-color>${Object.keys(COLOR_MAP).map(k=>`<option value="${COLOR_MAP[k]}" ${COLOR_MAP[k]===item.accent?"selected":""}>${k}</option>`).join("")}</select></div>
+ <div class="control"><select data-shape>${item.shapes.map(s=>`<option>${s}</option>`).join("")}</select></div>
+ <button class="code-btn" data-code>CODE</button></div></div>`;
+ const stage=card.querySelector("[data-preview]");
+ const live=stage.querySelector(".forge-snippet");
+ const colorSel=card.querySelector("[data-color]");
+ const shapeSel=card.querySelector("[data-shape]");
+ let shadow=null;
+ function mountPreview(){
+  if(!live)return;
+  shadow=live.shadowRoot || live.attachShadow({mode:"open"});
+  const accent=colorSel.value, radius=radiusFor(shapeSel.value);
+  live.style.setProperty("--accent",accent); live.style.setProperty("--radius",radius);
+  shadow.innerHTML="";
+  const base=document.createElement("style");
+  base.textContent=`:host{--accent:${accent};--radius:${radius};display:flex;align-items:center;justify-content:center;width:100%;height:100%;color-scheme:dark}*{box-sizing:border-box}`;
+  shadow.appendChild(base);
+  const inner=document.createElement("div");
+  inner.innerHTML=item.preview;
+  shadow.appendChild(inner);
+  const recipe=document.createElement("style");
+  recipe.textContent=item.css;
+  shadow.appendChild(recipe);
+ }
+ function update(){mountPreview();}
+ mountPreview();
+ colorSel.addEventListener("change",update);
+ shapeSel.addEventListener("change",update);
+ card.querySelector("[data-code]").addEventListener("click",()=>{
+  let code=item.code.replace(/--accent:[^;]+;/,"--accent:"+colorSel.value+";")
+                   .replace(/--radius:[^;]+;/,"--radius:"+radiusFor(shapeSel.value)+";");
+  showCode(item.name,code);
+ });
+ return card;
+}
+function render(list){
+ grid.innerHTML="";
+ list.forEach((item,i)=>grid.appendChild(itemCard(item,i)));
+ document.getElementById("empty").hidden=list.length!==0;
+}
+render(ITEMS);
+search.addEventListener("input",()=>{
+ const q=search.value.trim().toLowerCase();
+ render(ITEMS.filter(x=>(x.name+" "+x.id).toLowerCase().includes(q)));
+});
+</script>
+</body>
+</html>
