@@ -99,14 +99,14 @@ body.drawer-open{overflow:hidden!important;touch-action:none}
  <aside class="drawer-panel" aria-label="Site navigation">
   <div class="drawer-head"><div class="drawer-title">UI Areena / UI</div><button class="close-btn" aria-label="Close">×</button></div>
   <div class="drawer-section">Library</div><div class="drawer-grid"><a class="drawer-link" href="index.html"><span>Home</span><span>01</span></a>
-<a class="drawer-link" href="buttons.html"><span>Buttons</span><span>40+</span></a>
-<a class="drawer-link" href="navbar.html"><span>Navbars</span><span>39+</span></a>
-<a class="drawer-link" href="forms.html"><span>Forms</span><span>32+</span></a>
-<a class="drawer-link" href="cards.html"><span>Cards</span><span>38+</span></a>
-<a class="drawer-link" href="ui-library.html"><span>UI Library</span><span>46+</span></a>
-<a class="drawer-link" href="icons.html"><span>Icons</span><span>320+</span></a>
-<a class="drawer-link" href="architecture.html"><span>Architecture</span><span>30+</span></a>
-<a class="drawer-link" href="prompts.html"><span>Prompts</span><span>34+</span></a></div>
+<a class="drawer-link" href="login.html?redirect=buttons.html"><span>Buttons</span><span>40+</span></a>
+<a class="drawer-link" href="login.html?redirect=navbar.html"><span>Navbars</span><span>39+</span></a>
+<a class="drawer-link" href="login.html?redirect=forms.html"><span>Forms</span><span>32+</span></a>
+<a class="drawer-link" href="login.html?redirect=cards.html"><span>Cards</span><span>38+</span></a>
+<a class="drawer-link" href="login.html?redirect=ui-library.html"><span>UI Library</span><span>46+</span></a>
+<a class="drawer-link" href="login.html?redirect=icons.html"><span>Icons</span><span>320+</span></a>
+<a class="drawer-link" href="login.html?redirect=architecture.html"><span>Architecture</span><span>30+</span></a>
+<a class="drawer-link" href="login.html?redirect=prompts.html"><span>Prompts</span><span>34+</span></a></div>
   <div class="drawer-section">Appearance</div>
   <div class="theme-row"><button data-theme-choice="dark">Dark</button><button data-theme-choice="light">Light</button></div>
  </aside>
@@ -247,5 +247,5 @@ search.addEventListener("input",()=>{
  render(ITEMS.filter(x=>(x.name+" "+x.id).toLowerCase().includes(q)));
 });
 </script>
-</body>
+\n<script>\n/* UI Areena protected navigation guard */\n(function(){\n  const protectedPages=new Set(["buttons.html","navbar.html","forms.html","cards.html","ui-library.html","icons.html","prompts.html","architecture.html"]);\n  document.addEventListener("click",function(e){\n    const a=e.target.closest && e.target.closest("a[href]");\n    if(!a) return;\n    const raw=a.getAttribute("href");\n    if(!raw || raw.startsWith("#") || raw.startsWith("http") || raw.startsWith("mailto:") || raw.startsWith("login.html")) return;\n    const url=new URL(raw,location.href);\n    if(url.origin===location.origin && protectedPages.has(url.pathname.split("/").pop())){\n      e.preventDefault();\n      location.href="login.html?redirect="+encodeURIComponent(url.pathname.split("/").pop()+url.search+url.hash);\n    }\n  });\n})();\n</script>\n</body>
 </html>

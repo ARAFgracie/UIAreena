@@ -1362,7 +1362,7 @@ const supabaseClient =
 window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
-);
+);\n\n/* Requested destination from the page the visitor originally selected. */\nconst redirectParam=new URLSearchParams(window.location.search).get("redirect");\nconst allowedRedirects=["buttons.html","navbar.html","forms.html","cards.html","ui-library.html","icons.html","prompts.html","architecture.html"];\nconst requestedDestination=allowedRedirects.includes(redirectParam)?redirectParam:"index.html";\n\nfunction goToRequestedPage(){\n    window.location.replace(requestedDestination);\n}
 
 
 /* =========================================================
@@ -1408,8 +1408,7 @@ async function checkExistingSession(){
 
     if(data && data.session){
 
-        window.location.href =
-            "index.html";
+        goToRequestedPage();
 
     }
 
