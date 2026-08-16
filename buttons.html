@@ -86,7 +86,29 @@ pre{margin:0;white-space:pre-wrap;word-break:break-word;background:#07090c;color
 body.drawer-open{overflow:hidden!important;touch-action:none}
 .drawer{overscroll-behavior:contain}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}.forge-snippet{width:100%;height:100%;display:flex;align-items:center;justify-content:center;contain:content;isolation:isolate}
+[data-theme-choice][aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:2px;font-weight:900}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(function(){
+  const SUPABASE_URL = "https://olqfwgbrgpywqkxcbjlt.supabase.co";
+  const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+  const page = location.pathname.split('/').pop() || 'index.html';
+  if(page === 'login.html') return;
+  const next = page + location.search + location.hash;
+  function goLogin(){ location.replace('login.html?next=' + encodeURIComponent(next)); }
+  if(!window.supabase || SUPABASE_KEY === 'YOUR_SUPABASE_PUBLISHABLE_KEY') {
+    // The real publishable key must be present for Supabase session checks.
+    // Do not silently grant access when it is missing.
+    goLogin(); return;
+  }
+  try{
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    client.auth.getSession().then(({data})=>{ if(!data || !data.session) goLogin(); });
+  }catch(e){ goLogin(); }
+})();
+</script>
 </head>
 <body>
 <header class="sitebar">

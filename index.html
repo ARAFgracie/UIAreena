@@ -70,7 +70,29 @@ pre{margin:0;white-space:pre-wrap;word-break:break-word;background:#07090c;color
 @media(max-width:470px){.grid{grid-template-columns:1fr}.preview{min-height:210px}.controls{grid-template-columns:1fr 1fr}.hero p{font-size:14px}}
 .home-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.home-card{border:1px solid var(--line);border-radius:24px;background:var(--panel);overflow:hidden}.home-preview{min-height:185px;padding:18px;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,rgba(184,255,44,.08),transparent 60%),var(--panel2);border-bottom:1px solid var(--line);--accent:#b8ff2c}.home-preview>*{max-width:100%}.home-info{padding:16px}.home-info h2{font-size:18px;margin:7px 0}.home-info p{font-size:12px;line-height:1.55;color:var(--muted);min-height:38px}.explore{display:inline-flex;padding:10px 12px;border-radius:10px;background:var(--accent);color:#071006;font-size:11px;font-weight:950}@media(max-width:1050px){.home-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:760px){.home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:470px){.home-grid{grid-template-columns:1fr}}body.drawer-open{overflow:hidden!important;touch-action:none}
 .drawer{overscroll-behavior:contain}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}</style></head>
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}[data-theme-choice][aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:2px;font-weight:900}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(function(){
+  const SUPABASE_URL = "https://olqfwgbrgpywqkxcbjlt.supabase.co";
+  const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+  const page = location.pathname.split('/').pop() || 'index.html';
+  if(page === 'login.html') return;
+  const next = page + location.search + location.hash;
+  function goLogin(){ location.replace('login.html?next=' + encodeURIComponent(next)); }
+  if(!window.supabase || SUPABASE_KEY === 'YOUR_SUPABASE_PUBLISHABLE_KEY') {
+    // The real publishable key must be present for Supabase session checks.
+    // Do not silently grant access when it is missing.
+    goLogin(); return;
+  }
+  try{
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    client.auth.getSession().then(({data})=>{ if(!data || !data.session) goLogin(); });
+  }catch(e){ goLogin(); }
+})();
+</script>
+</head>
 <body><header class="sitebar"><a class="brand" href="index.html"><span class="brandmark"></span><span>UI Areena</span><small>/UI</small></a><button class="menu-btn" aria-label="Open navigation">•••</button></header>
 <div class="drawer" aria-hidden="true">
  <div class="scrim"></div>

@@ -120,7 +120,29 @@ body.drawer-open{overflow:hidden!important;touch-action:none}
 @media(max-width:760px){.icon-toolbar{grid-template-columns:1fr}.icon-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.icon-preview{height:128px}.icon-preview svg{width:50px;height:50px}.icon-meta{padding:11px}.icon-name{font-size:13px}.icon-actions{flex-direction:column}.icon-code{width:100%}}
 @media(max-width:390px){.icon-grid{grid-template-columns:1fr}}
 
+[data-theme-choice][aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:2px;font-weight:900}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(function(){
+  const SUPABASE_URL = "https://olqfwgbrgpywqkxcbjlt.supabase.co";
+  const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+  const page = location.pathname.split('/').pop() || 'index.html';
+  if(page === 'login.html') return;
+  const next = page + location.search + location.hash;
+  function goLogin(){ location.replace('login.html?next=' + encodeURIComponent(next)); }
+  if(!window.supabase || SUPABASE_KEY === 'YOUR_SUPABASE_PUBLISHABLE_KEY') {
+    // The real publishable key must be present for Supabase session checks.
+    // Do not silently grant access when it is missing.
+    goLogin(); return;
+  }
+  try{
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    client.auth.getSession().then(({data})=>{ if(!data || !data.session) goLogin(); });
+  }catch(e){ goLogin(); }
+})();
+</script>
 </head>
 <body>
 <header class="sitebar">
@@ -134,14 +156,14 @@ body.drawer-open{overflow:hidden!important;touch-action:none}
   <div class="drawer-section">Library</div>
   <div class="drawer-grid">
    <a class="drawer-link" href="index.html"><span>Home</span><span>01</span></a>
-   <a class="drawer-link" href="login.html?redirect=buttons.html"><span>Buttons</span><span>40+</span></a>
-   <a class="drawer-link" href="login.html?redirect=navbar.html"><span>Navbars</span><span>39+</span></a>
-   <a class="drawer-link" href="login.html?redirect=forms.html"><span>Forms</span><span>32+</span></a>
-   <a class="drawer-link" href="login.html?redirect=cards.html"><span>Cards</span><span>38+</span></a>
-   <a class="drawer-link" href="login.html?redirect=ui-library.html"><span>UI Library</span><span>46+</span></a>
-   <a class="drawer-link" href="login.html?redirect=icons.html"><span>Icons</span><span>360+</span></a>
-   <a class="drawer-link" href="login.html?redirect=architecture.html"><span>Architecture</span><span>30+</span></a>
-   <a class="drawer-link" href="login.html?redirect=prompts.html"><span>Prompts</span><span>34+</span></a>
+   <a class="drawer-link" href="buttons.html"><span>Buttons</span><span>40+</span></a>
+   <a class="drawer-link" href="navbar.html"><span>Navbars</span><span>39+</span></a>
+   <a class="drawer-link" href="forms.html"><span>Forms</span><span>32+</span></a>
+   <a class="drawer-link" href="cards.html"><span>Cards</span><span>38+</span></a>
+   <a class="drawer-link" href="ui-library.html"><span>UI Library</span><span>46+</span></a>
+   <a class="drawer-link" href="icons.html"><span>Icons</span><span>360+</span></a>
+   <a class="drawer-link" href="architecture.html"><span>Architecture</span><span>30+</span></a>
+   <a class="drawer-link" href="prompts.html"><span>Prompts</span><span>34+</span></a>
   </div>
   <div class="drawer-section">Appearance</div>
   <div class="theme-row"><button data-theme-choice="dark">Dark</button><button data-theme-choice="light">Light</button></div>
@@ -243,5 +265,5 @@ function setTheme(theme){document.documentElement.dataset.theme=theme;localStora
 const saved=localStorage.getItem("ui-areena-theme");if(saved)setTheme(saved);
 document.querySelectorAll("[data-theme-choice]").forEach(b=>b.addEventListener("click",()=>setTheme(b.dataset.themeChoice)));
 </script>
-\n<script>\n/* UI Areena protected navigation guard */\n(function(){\n  const protectedPages=new Set(["buttons.html","navbar.html","forms.html","cards.html","ui-library.html","icons.html","prompts.html","architecture.html"]);\n  document.addEventListener("click",function(e){\n    const a=e.target.closest && e.target.closest("a[href]");\n    if(!a) return;\n    const raw=a.getAttribute("href");\n    if(!raw || raw.startsWith("#") || raw.startsWith("http") || raw.startsWith("mailto:") || raw.startsWith("login.html")) return;\n    const url=new URL(raw,location.href);\n    if(url.origin===location.origin && protectedPages.has(url.pathname.split("/").pop())){\n      e.preventDefault();\n      location.href="login.html?redirect="+encodeURIComponent(url.pathname.split("/").pop()+url.search+url.hash);\n    }\n  });\n})();\n</script>\n</body>
+</body>
 </html>
