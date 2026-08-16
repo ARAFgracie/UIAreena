@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"><meta name="color-scheme" content="dark light"><meta name="theme-color" content="#07090c">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="Actual navigation systems: commerce headers, editorial mastheads, dashboard rails, search-first navigation, mobile docks and more.">
 <title>Navbars — UI Areena</title>
@@ -87,28 +87,47 @@ body.drawer-open{overflow:hidden!important;touch-action:none}
 .drawer{overscroll-behavior:contain}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}.forge-snippet{width:100%;height:100%;display:block;contain:content;isolation:isolate}
 [data-theme-choice][aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:2px;font-weight:900}
+html,body{max-width:100%;overflow-x:hidden}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
+
+<style id="ui-areena-auth-guard">
+html.auth-pending body{visibility:hidden!important}
+html.auth-ready body{visibility:visible!important}
+</style>
 <script>
 (function(){
-  const SUPABASE_URL = "https://olqfwgbrgpywqkxcbjlt.supabase.co";
-  const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
   const page = location.pathname.split('/').pop() || 'index.html';
   if(page === 'login.html') return;
-  const next = page + location.search + location.hash;
-  function goLogin(){ location.replace('login.html?next=' + encodeURIComponent(next)); }
-  if(!window.supabase || SUPABASE_KEY === 'YOUR_SUPABASE_PUBLISHABLE_KEY') {
-    // The real publishable key must be present for Supabase session checks.
-    // Do not silently grant access when it is missing.
+  document.documentElement.classList.add('auth-pending');
+
+  const SUPABASE_URL = "https://olqfwgbrgpywqkxcbjlt.supabase.co";
+  const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+  function goLogin(){
+    const next = (page || 'index.html') + location.search + location.hash;
+    location.replace('login.html?next=' + encodeURIComponent(next));
+  }
+  function ready(){ document.documentElement.classList.remove('auth-pending'); document.documentElement.classList.add('auth-ready'); }
+
+  if(!window.supabase || !SUPABASE_KEY || SUPABASE_KEY === 'YOUR_SUPABASE_PUBLISHABLE_KEY'){
     goLogin(); return;
   }
   try{
     const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    client.auth.getSession().then(({data})=>{ if(!data || !data.session) goLogin(); });
+    client.auth.getSession().then(({data,error})=>{
+      if(error || !data || !data.session){ goLogin(); return; }
+      ready();
+    }).catch(goLogin);
+    client.auth.onAuthStateChange((event, session)=>{
+      if(event === 'SIGNED_OUT' || !session) goLogin();
+    });
   }catch(e){ goLogin(); }
 })();
 </script>
+
 </head>
 <body>
 <header class="sitebar">
