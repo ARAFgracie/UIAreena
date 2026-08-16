@@ -76,40 +76,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 
 
-<style id="ui-areena-auth-guard">
-html.auth-pending body{visibility:hidden!important}
-html.auth-ready body{visibility:visible!important}
-</style>
-<script>
-(function(){
-  const page = location.pathname.split('/').pop() || 'index.html';
-  if(page === 'login.html') return;
-  document.documentElement.classList.add('auth-pending');
-
-  const SUPABASE_URL = "https://olqfwgbrgpywqkxcbjlt.supabase.co";
-  const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
-
-  function goLogin(){
-    const next = (page || 'index.html') + location.search + location.hash;
-    location.replace('login.html?next=' + encodeURIComponent(next));
-  }
-  function ready(){ document.documentElement.classList.remove('auth-pending'); document.documentElement.classList.add('auth-ready'); }
-
-  if(!window.supabase || !SUPABASE_KEY || SUPABASE_KEY === 'YOUR_SUPABASE_PUBLISHABLE_KEY'){
-    goLogin(); return;
-  }
-  try{
-    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    client.auth.getSession().then(({data,error})=>{
-      if(error || !data || !data.session){ goLogin(); return; }
-      ready();
-    }).catch(goLogin);
-    client.auth.onAuthStateChange((event, session)=>{
-      if(event === 'SIGNED_OUT' || !session) goLogin();
-    });
-  }catch(e){ goLogin(); }
-})();
-</script>
+<style id="ui-areena-auth-guard">html.auth-ready body{visibility:visible!important}</style>
 
 </head>
 <body><header class="sitebar"><a class="brand" href="index.html"><span class="brandmark"></span><span>UI Areena</span><small>/UI</small></a><button class="menu-btn" aria-label="Open navigation">•••</button></header>

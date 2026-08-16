@@ -11,8 +11,6 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
 .auth-card{width:min(100%,500px);padding:30px;border:1px solid var(--line);border-radius:28px;background:var(--panel);backdrop-filter:blur(24px);box-shadow:0 28px 90px rgba(0,0,0,.28)}
 .progress-top{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-weight:800;margin-bottom:9px}.progress-track{height:5px;border-radius:99px;background:var(--line);overflow:hidden}.progress-fill{height:100%;width:50%;background:var(--accent);transition:width .3s ease}.eyebrow{display:flex;gap:8px;align-items:center;color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;margin:28px 0 10px}.dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}h1{font-size:34px;letter-spacing:-.05em;margin-bottom:8px}.sub{color:var(--muted);line-height:1.6;font-size:14px;margin-bottom:24px}.group{margin-top:16px}.group label{display:block;font-size:12px;font-weight:800;margin-bottom:8px}.input{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);color:var(--text);outline:none}.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent)}.input.invalid{border-color:var(--danger)}.error{min-height:17px;color:var(--danger);font-size:11px;margin-top:6px}.row{display:flex;gap:10px;margin-top:20px}.btn{flex:1;border:0;border-radius:13px;padding:14px 16px;font-weight:950;cursor:pointer}.primary{background:var(--accent);color:#081006}.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}.btn:disabled{opacity:.55;cursor:not-allowed}.message{margin-top:17px;padding:12px 13px;border-radius:12px;font-size:12px;line-height:1.5;display:none}.message.show{display:block}.message.error{color:#ffb0b0;background:rgba(255,70,70,.08)}.message.success{color:var(--success);background:rgba(60,220,100,.08)}.theme{display:flex;gap:8px;margin-top:20px}.theme button{flex:1;border:1px solid var(--line);background:transparent;color:var(--text);padding:9px;border-radius:10px}.theme button[aria-pressed=true]{outline:2px solid var(--accent)}.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:20px}.hidden{display:none!important}@media(max-width:520px){.page{padding:18px}.brand{top:18px;left:20px}.auth-card{padding:23px;border-radius:23px}h1{font-size:29px}}
 
-.setup-warning{display:none;margin-top:14px;padding:12px 13px;border:1px solid rgba(255,180,84,.28);background:rgba(255,180,84,.08);color:#ffd39a;border-radius:12px;font-size:12px;line-height:1.55}
-.setup-warning.show{display:block}
 
 </style></head><body><div class="page"><div class="brand">UI <span>Areena</span></div><main class="auth-card">
 <div class="progress-top"><span id="stepText">Account access</span><span id="stepNo">01 / 01</span></div><div class="progress-track"><div class="progress-fill" id="progress"></div></div>
@@ -25,13 +23,12 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
 <div class="group"><label for="age">Age</label><input class="input" id="age" type="number" min="1" max="120" inputmode="numeric" placeholder="Your age"><div class="error" id="ageError"></div></div>
 <div class="group"><label for="profession">Profession</label><input class="input" id="profession" autocomplete="organization-title" placeholder="Student, Developer, Designer..."><div class="error" id="professionError"></div></div>
 <div class="row"><button class="btn secondary" id="backBtn">← Back</button><button class="btn primary" id="createBtn">Create account →</button></div></section>
-<div class="message" id="message"></div><div class="setup-warning" id="setupWarning">Supabase is not configured yet. Replace <b>YOUR_SUPABASE_PUBLISHABLE_KEY</b> in this file with your Supabase publishable/anon key.</div><div class="theme"><button data-theme="dark">Dark</button><button data-theme="light">Light</button></div><div class="footer">Passwordless access · UI Areena</div>
+<div class="message" id="message"></div><div class="theme"><button data-theme="dark">Dark</button><button data-theme="light">Light</button></div><div class="footer">Quick access · UI Areena</div>
 </main></div>
 <script>
 const SUPABASE_URL="https://olqfwgbrgpywqkxcbjlt.supabase.co";
 const SUPABASE_KEY="sb_publishable_ISHDfYvnuczqozPHvx-AAg_6_XyZ8cc";
-const clientReady=!!(window.supabase&&SUPABASE_KEY&&SUPABASE_KEY!=="YOUR_SUPABASE_PUBLISHABLE_KEY");
-const client=clientReady?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY):null;
+const client=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
 const qs=new URLSearchParams(location.search);
 const rawNext=qs.get("next")||"index.html";
 const allowedPages=new Set(["index.html","buttons.html","navbar.html","forms.html","cards.html","ui-library.html","icons.html","architecture.html","prompts.html"]);
@@ -46,94 +43,77 @@ function theme(t){document.documentElement.dataset.theme=t;localStorage.setItem(
 theme(localStorage.getItem("ui-areena-theme")||"dark");
 document.querySelectorAll("[data-theme]").forEach(b=>b.onclick=()=>theme(b.dataset.theme));
 
-if(!clientReady){$("setupWarning").classList.add("show");$("continueBtn").disabled=true;$("createBtn").disabled=true}
-else{
-  client.auth.getSession().then(({data})=>{if(data&&data.session)location.replace(next)}).catch(()=>{});
-}
+// If this browser already completed the quick access form, skip the login page.
+if(localStorage.getItem("ui-areena-access")==="granted") location.replace(next);
 
 function contactValid(){
-  let ok=true;clearMsg();
-  const e=$("email").value.trim(),p=$("phone").value.trim();
+  let ok=true; clearMsg();
+  const e=$("email").value.trim(), p=$("phone").value.trim();
   if(!validEmail(e)){err("email","Enter a valid email address.");ok=false}else err("email","");
   if(!phoneOk(p)){err("phone","Enter a valid Bangladesh phone number.");ok=false}else err("phone","");
   return ok;
 }
-
 function showProfileStep(){
-  $("contactStep").classList.add("hidden");
-  $("profileStep").classList.remove("hidden");
-  $("stepText").textContent="Profile details";
-  $("stepNo").textContent="02 / 02";
-  $("progress").style.width="100%";
-  clearMsg();
-  $("name").focus({preventScroll:true});
+  $("contactStep").classList.add("hidden"); $("profileStep").classList.remove("hidden");
+  $("stepText").textContent="Profile details"; $("stepNo").textContent="02 / 02"; $("progress").style.width="100%";
+  clearMsg(); $("name").focus({preventScroll:true});
+}
+function grantAccess(){
+  localStorage.setItem("ui-areena-access","granted");
+  localStorage.setItem("ui-areena-access-at",Date.now().toString());
+  location.replace(next);
 }
 
 $("continueBtn").onclick=async()=>{
-  if(!clientReady){msg("Supabase is not configured yet.");return}
   if(!contactValid())return;
-  $("continueBtn").disabled=true;clearMsg();
+  $("continueBtn").disabled=true; clearMsg();
   try{
-    const e=$("email").value.trim();
-    const {error}=await client.auth.signInWithOtp({
-      email:e,
-      options:{
-        emailRedirectTo:location.origin+location.pathname+"?next="+encodeURIComponent(next),
-        shouldCreateUser:false
-      }
-    });
-    if(!error){msg("Welcome back. Check your email for the secure sign-in link.","success");return}
-    const text=(error.message||"").toLowerCase();
-    const missingUser=/user.*(not found|does not exist|not exist)|no user|invalid login|signups.*disabled|signup.*disabled/.test(text);
-    if(missingUser){showProfileStep();return}
-    msg(error.message||"Unable to continue.");
-  }catch(e){msg(e.message||"Unable to continue.")}
+    const email=$("email").value.trim().toLowerCase();
+    const phone=$("phone").value.trim();
+    // Existing users get one form. The RPC returns only true/false; personal rows stay private.
+    const {data,error}=await client.rpc("ui_areena_visitor_exists",{p_email:email,p_phone:phone});
+    if(error){
+      // If the optional lookup function has not been created yet, do not block the user.
+      showProfileStep();
+      return;
+    }
+    if(data===true){grantAccess();return;}
+    showProfileStep();
+  }catch(e){showProfileStep()}
   finally{$("continueBtn").disabled=false}
 };
 
 $("backBtn").onclick=()=>{
-  $("profileStep").classList.add("hidden");
-  $("contactStep").classList.remove("hidden");
-  $("stepText").textContent="Account access";
-  $("stepNo").textContent="01 / 01";
-  $("progress").style.width="50%";
-  clearMsg();
-  $("email").focus({preventScroll:true});
+  $("profileStep").classList.add("hidden"); $("contactStep").classList.remove("hidden");
+  $("stepText").textContent="Account access"; $("stepNo").textContent="01 / 01"; $("progress").style.width="50%";
+  clearMsg(); $("email").focus({preventScroll:true});
 };
 
 $("createBtn").onclick=async()=>{
-  if(!clientReady){msg("Supabase is not configured yet.");return}
-  let ok=true;clearMsg();
-  const n=$("name").value.trim(),a=Number($("age").value),p=$("profession").value.trim();
+  let ok=true; clearMsg();
+  const n=$("name").value.trim(), a=Number($("age").value), prof=$("profession").value.trim();
   if(!n){err("name","Enter your name.");ok=false}else err("name","");
   if(!a||a<1||a>120){err("age","Enter a valid age.");ok=false}else err("age","");
-  if(!p){err("profession","Enter your profession.");ok=false}else err("profession","");
+  if(!prof){err("profession","Enter your profession.");ok=false}else err("profession","");
   if(!ok)return;
   $("createBtn").disabled=true;
   try{
-    const e=$("email").value.trim(),phone=$("phone").value.trim();
-    const {error}=await client.auth.signInWithOtp({
-      email:e,
-      options:{
-        emailRedirectTo:location.origin+location.pathname+"?next="+encodeURIComponent(next),
-        shouldCreateUser:true,
-        data:{name:n,phone,age:a,profession:p}
-      }
-    });
-    if(error)throw error;
-    msg("Account started. Check your email to finish signing in.","success");
-  }catch(e){msg(e.message||"Unable to create account.")}
-  finally{$("createBtn").disabled=false}
+    const email=$("email").value.trim().toLowerCase(), phone=$("phone").value.trim();
+    const {error}=await client.from("ui_areena_visitors").insert({email,phone,name:n,age:a,profession:prof});
+    if(error && error.code!=="23505") throw error;
+    grantAccess();
+  }catch(e){
+    // The visitor can still use the public library even if the optional analytics table is unavailable.
+    localStorage.setItem("ui-areena-access","granted");
+    localStorage.setItem("ui-areena-access-at",Date.now().toString());
+    grantAccess();
+  }finally{$("createBtn").disabled=false}
 };
 
 document.addEventListener("keydown",e=>{
-  if(e.key==="Enter" && !e.shiftKey){
-    const active=document.activeElement;
-    if(active&&active.tagName==="INPUT"){
-      e.preventDefault();
-      if(!$("profileStep").classList.contains("hidden"))$("createBtn").click();
-      else $("continueBtn").click();
-    }
+  if(e.key==="Enter"&&!e.shiftKey&&document.activeElement?.tagName==="INPUT"){
+    e.preventDefault();
+    if(!$('profileStep').classList.contains('hidden')) $('createBtn').click(); else $('continueBtn').click();
   }
 });
 </script></body></html>
