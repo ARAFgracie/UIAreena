@@ -85,28 +85,17 @@ html.auth-ready body{visibility:visible!important}
   if(page === 'login.html') return;
   document.documentElement.classList.add('auth-pending');
 
-  const SUPABASE_URL = "https://olqfwgbrgpywqkxcbjlt.supabase.co";
-  const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
-
   function goLogin(){
     const next = (page || 'index.html') + location.search + location.hash;
     location.replace('login.html?next=' + encodeURIComponent(next));
   }
   function ready(){ document.documentElement.classList.remove('auth-pending'); document.documentElement.classList.add('auth-ready'); }
 
-  if(!window.supabase || !SUPABASE_KEY || SUPABASE_KEY === 'YOUR_SUPABASE_PUBLISHABLE_KEY'){
-    goLogin(); return;
+  if(localStorage.getItem('ui-areena-access') === 'granted'){
+    ready();
+  }else{
+    goLogin();
   }
-  try{
-    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    client.auth.getSession().then(({data,error})=>{
-      if(error || !data || !data.session){ goLogin(); return; }
-      ready();
-    }).catch(goLogin);
-    client.auth.onAuthStateChange((event, session)=>{
-      if(event === 'SIGNED_OUT' || !session) goLogin();
-    });
-  }catch(e){ goLogin(); }
 })();
 </script>
 
