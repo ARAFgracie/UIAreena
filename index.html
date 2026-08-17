@@ -81,8 +81,8 @@ html,body{max-width:100%;overflow-x:hidden}
 </style>
 
 </head>
-<body><header class="sitebar"><a class="brand" href="index.html"><span class="brandmark"></span><span>UI Areena</span><small>/UI</small></a><button class="menu-btn" aria-label="Open navigation">•••</button></header>
-<div class="drawer" aria-hidden="true">
+<body><header class="sitebar"><a class="brand" href="index.html"><span class="brandmark"></span><span>UI Areena</span><small>/UI</small></a><button class="menu-btn" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-drawer">•••</button></header>
+<div class="drawer" id="site-drawer" aria-hidden="true">
  <div class="scrim"></div>
  <aside class="drawer-panel" aria-label="Site navigation">
   <div class="drawer-head"><div class="drawer-title">UI Areena / UI</div><button class="close-btn" aria-label="Close">×</button></div>
@@ -115,83 +115,118 @@ html,body{max-width:100%;overflow-x:hidden}
 <script>
 /* =========================================================
    UI AREENA — PUBLIC HOME + AUTH ON INTERACTION
-   Home stays freely viewable. Protected library navigation
-   sends unauthenticated visitors to login.html.
+   Home remains public. Protected library interactions redirect
+   unauthenticated users to login.html with the requested page.
 ========================================================= */
 const SUPABASE_URL="https://olqfwgbrgpywqkxcbjlt.supabase.co";
 const SUPABASE_KEY="sb_publishable_ISHDfYvnuczqozPHvx-AAg_6_XyZ8cc";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY)||null;
+
+const PROTECTED_PAGES=new Set([
+  "buttons.html","navbar.html","forms.html","cards.html",
+  "ui-library.html","icons.html","architecture.html","prompts.html",
+  "admin.html"
+]);
+
+function cleanTarget(target){
+  if(!target)return"index.html";
+  const value=String(target).trim();
+  if(!value||value.startsWith("#")||value.startsWith("http")||value.startsWith("//"))return"index.html";
+  return value;
+}
+
+function protectedTargetFromLink(link){
+  const href=link?.getAttribute("href")||"";
+  if(!href||href.startsWith("#")||href.startsWith("http")||href.startsWith("//"))return null;
+  const file=href.split("#")[0].split("?")[0].split("/").pop();
+  return PROTECTED_PAGES.has(file)?href:null;
+}
 
 async function requireAuth(target){
+  const safeTarget=cleanTarget(target);
   try{
+    if(!supabaseClient)throw new Error("Supabase client unavailable");
     const {data,error}=await supabaseClient.auth.getSession();
-    if(error || !data?.session){
-      location.href="login.html?next="+encodeURIComponent(target);
-      return false;
-    }
-    return true;
-  }catch(e){
-    location.href="login.html?next="+encodeURIComponent(target);
-    return false;
+    if(!error&&data?.session)return true;
+  }catch(err){
+    console.error("Auth check failed:",err);
   }
+  location.href="login.html?next="+encodeURIComponent(safeTarget);
+  return false;
 }
 
 async function navigateProtected(target){
-  if(await requireAuth(target)) location.href=target;
+  const safeTarget=cleanTarget(target);
+  closeDrawer();
+  if(await requireAuth(safeTarget))location.href=safeTarget;
 }
 
-/* Library links: home is public; all other destinations require login. */
+/* Only the actual protected library links are intercepted.
+   Home and ordinary external links remain untouched. */
 document.addEventListener("click",async e=>{
   const link=e.target.closest("a[href]");
-  if(!link) return;
-  const href=link.getAttribute("href");
-  if(!href || href.startsWith("#") || href.startsWith("http") || href==="index.html") return;
-  if(link.classList.contains("drawer-link") || link.classList.contains("explore")){
-    e.preventDefault();
-    await navigateProtected(href);
-  }
+  if(!link)return;
+  const target=protectedTargetFromLink(link);
+  if(!target)return;
+  e.preventDefault();
+  await navigateProtected(target);
 });
 
 /* =========================================================
    ADMIN SHORTCUT — Alt + A, then Enter
-   Database authority: profiles.is_admin === true
+   Admin authority comes only from profiles.is_admin === true.
 ========================================================= */
 let adminShortcutArmed=false;
 let adminShortcutTimer=null;
 
+function armAdminShortcut(){
+  adminShortcutArmed=true;
+  clearTimeout(adminShortcutTimer);
+  adminShortcutTimer=setTimeout(()=>adminShortcutArmed=false,3000);
+  toast("Admin shortcut armed");
+}
+
+async function openAdmin(){
+  adminShortcutArmed=false;
+  clearTimeout(adminShortcutTimer);
+  try{
+    if(!supabaseClient)throw new Error("Supabase client unavailable");
+
+    const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
+    if(sessionError||!sessionData?.session){
+      location.href="login.html?next="+encodeURIComponent("admin.html");
+      return;
+    }
+
+    const user=sessionData.session.user;
+    const {data:profile,error:profileError}=await supabaseClient
+      .from("profiles")
+      .select("is_admin")
+      .eq("id",user.id)
+      .maybeSingle();
+
+    if(!profileError&&profile?.is_admin===true){
+      location.href="admin.html";
+      return;
+    }
+
+    console.warn("Admin verification failed:",profileError||"is_admin is not true");
+    toast("Admin access denied");
+  }catch(err){
+    console.error("Admin shortcut error:",err);
+    toast("Unable to verify admin access");
+  }
+}
+
 document.addEventListener("keydown",async e=>{
-  if(e.altKey && e.key.toLowerCase()==="a"){
+  if(e.altKey&&e.key.toLowerCase()==="a"){
     e.preventDefault();
-    adminShortcutArmed=true;
-    clearTimeout(adminShortcutTimer);
-    adminShortcutTimer=setTimeout(()=>adminShortcutArmed=false,3000);
+    armAdminShortcut();
     return;
   }
-  if(adminShortcutArmed && e.key==="Enter"){
+  if(adminShortcutArmed&&e.key==="Enter"){
     e.preventDefault();
-    adminShortcutArmed=false;
-    clearTimeout(adminShortcutTimer);
-    try{
-      const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
-      if(sessionError || !sessionData?.session){
-        location.href="login.html?next="+encodeURIComponent("index.html");
-        return;
-      }
-      const user=sessionData.session.user;
-      const {data:profile,error:profileError}=await supabaseClient
-        .from("profiles")
-        .select("is_admin")
-        .eq("id",user.id)
-        .single();
-      if(!profileError && profile?.is_admin===true){
-        location.href="admin.html";
-      }else{
-        toast("Admin access denied");
-      }
-    }catch(err){
-      console.error("Admin shortcut error:",err);
-      toast("Unable to verify admin access");
-    }
+    await openAdmin();
   }
 });
 
@@ -205,7 +240,7 @@ function openDrawer(){
 }
 function closeDrawer(){
  const btn=document.querySelector(".menu-btn");
- drawer?.classList.remove("open"); document.body.classList.remove("drawer-open");
+ drawer?.classList.remove("open"); document.body.classList.remove("drawer-open"); if(!modal?.classList.contains("open"))document.body.style.overflow="";
  drawer?.setAttribute("aria-hidden","true"); btn?.setAttribute("aria-expanded","false");
  if(document.activeElement?.closest(".drawer")) btn?.focus({preventScroll:true});
 }
@@ -223,7 +258,7 @@ document.addEventListener("keydown",e=>{
   else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
  }
 });
-document.querySelectorAll(".drawer-link").forEach(a=>a.addEventListener("click",closeDrawer));
+
 function setTheme(theme){document.documentElement.dataset.theme=theme;localStorage.setItem("ui-areena-theme",theme)}
 const saved=localStorage.getItem("ui-areena-theme"); if(saved)setTheme(saved);
 document.querySelectorAll("[data-theme-choice]").forEach(b=>b.addEventListener("click",()=>setTheme(b.dataset.themeChoice)));
@@ -245,4 +280,4 @@ document.querySelector("#copy-all")?.addEventListener("click",async()=>{
  catch(e){const ta=document.createElement("textarea");ta.value=currentCode;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("Code copied")}
 });
 function toast(msg){const t=document.querySelector(".toast");if(!t)return;t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),1600)}
-const HOME=[{"name": "Buttons", "url": "buttons.html", "count": "40+ unique CTA and action patterns", "desc": "Actual button compositions with live color and shape controls.", "preview": "<button style='border:0;border-radius:14px;padding:12px 18px;background:var(--accent);font-weight:950'>Start building →</button>"}, {"name": "Navbars", "url": "navbar.html", "count": "39+ unique navigation systems", "desc": "Actual nav structures for commerce, editorial, SaaS and mobile.", "preview": "<nav style='display:flex;gap:16px;align-items:center;padding:11px;border:1px solid #303943;border-radius:14px'><b>UI Areena</b><span style='color:#9aa5b1'>Work　Library　About</span><button style='margin-left:auto;background:var(--accent);border:0;border-radius:8px;padding:7px'>Start</button></nav>"}, {"name": "Forms", "url": "forms.html", "count": "32+ unique form patterns", "desc": "Auth, checkout, OTP, uploads, booking, filters and feedback.", "preview": "<form style='display:grid;gap:8px;width:230px'><input placeholder='Email' style='padding:9px;border-radius:8px;border:1px solid #303943;background:#0d1217;color:#fff'><button style='padding:9px;border:0;border-radius:8px;background:var(--accent);font-weight:900'>Continue</button></form>"}, {"name": "Cards", "url": "cards.html", "count": "38+ unique card surfaces", "desc": "Products, profiles, pricing, metrics, articles, tickets and more.", "preview": "<article style='width:230px;padding:13px;border:1px solid #303943;border-radius:15px'><div style='height:65px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#172019);display:grid;place-items:center;color:#071006'>PRODUCT</div><b style='display:block;margin-top:9px'>Arc Lounge Chair</b><small style='color:#89939f'>$420 · 4 finishes</small></article>"}, {"name": "UI Library", "url": "ui-library.html", "count": "46+ unique primitives", "desc": "Small interaction building blocks through advanced product UI.", "preview": "<div style='display:flex;gap:6px;padding:4px;border:1px solid #303943;border-radius:999px'><span style='padding:7px 10px;color:#7f8995'>Day</span><b style='padding:7px 10px;border-radius:999px;background:var(--accent);color:#071006'>Week</b></div>"}, {"name": "Architecture", "url": "architecture.html", "count": "30+ website flow models", "desc": "See how pages connect from entry point to conversion or output.", "preview": "<div style='display:flex;gap:5px;align-items:center;font-size:8px'><span style='padding:7px;border:1px solid #303943;border-radius:8px'>Home</span><b>→</b><span style='padding:7px;border:1px solid #303943;border-radius:8px'>Product</span><b>→</b><span style='padding:7px;background:var(--accent);color:#071006;border-radius:8px'>Checkout</span></div>"}, {"name": "Prompts", "url": "prompts.html", "count": "34+ engineered prompts", "desc": "Preview-only prompts for building complete website systems with AI.", "preview": "<div style='padding:12px;border:1px solid #303943;border-radius:12px;width:240px'><span style='font-size:7px;color:#b8ff2c'>ECOMMERCE</span><b style='display:block;margin:7px 0;font-size:10px'>Build a premium storefront...</b><small style='color:#7f8995'>Copy engineered prompt</small></div>"}];const hg=document.getElementById("home-grid");HOME.forEach(x=>{const c=document.createElement("article");c.className="home-card";c.innerHTML=`<div class="home-preview">${x.preview}</div><div class="home-info"><div class="kicker">${x.count}</div><h2>${x.name}</h2><p>${x.desc}</p><a class="explore" href="${x.url}">Explore →</a></div>`;hg.appendChild(c)});</script></body></html>
+const HOME=[{"name": "Buttons", "url": "buttons.html", "count": "40+ unique CTA and action patterns", "desc": "Actual button compositions with live color and shape controls.", "preview": "<button style='border:0;border-radius:14px;padding:12px 18px;background:var(--accent);font-weight:950'>Start building →</button>"}, {"name": "Navbars", "url": "navbar.html", "count": "39+ unique navigation systems", "desc": "Actual nav structures for commerce, editorial, SaaS and mobile.", "preview": "<nav style='display:flex;gap:16px;align-items:center;padding:11px;border:1px solid #303943;border-radius:14px'><b>UI Areena</b><span style='color:#9aa5b1'>Work　Library　About</span><button style='margin-left:auto;background:var(--accent);border:0;border-radius:8px;padding:7px'>Start</button></nav>"}, {"name": "Forms", "url": "forms.html", "count": "32+ unique form patterns", "desc": "Auth, checkout, OTP, uploads, booking, filters and feedback.", "preview": "<form style='display:grid;gap:8px;width:230px'><input placeholder='Email' style='padding:9px;border-radius:8px;border:1px solid #303943;background:#0d1217;color:#fff'><button type='button' style='padding:9px;border:0;border-radius:8px;background:var(--accent);font-weight:900'>Continue</button></form>"}, {"name": "Cards", "url": "cards.html", "count": "38+ unique card surfaces", "desc": "Products, profiles, pricing, metrics, articles, tickets and more.", "preview": "<article style='width:230px;padding:13px;border:1px solid #303943;border-radius:15px'><div style='height:65px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#172019);display:grid;place-items:center;color:#071006'>PRODUCT</div><b style='display:block;margin-top:9px'>Arc Lounge Chair</b><small style='color:#89939f'>$420 · 4 finishes</small></article>"}, {"name": "UI Library", "url": "ui-library.html", "count": "46+ unique primitives", "desc": "Small interaction building blocks through advanced product UI.", "preview": "<div style='display:flex;gap:6px;padding:4px;border:1px solid #303943;border-radius:999px'><span style='padding:7px 10px;color:#7f8995'>Day</span><b style='padding:7px 10px;border-radius:999px;background:var(--accent);color:#071006'>Week</b></div>"}, {"name": "Architecture", "url": "architecture.html", "count": "30+ website flow models", "desc": "See how pages connect from entry point to conversion or output.", "preview": "<div style='display:flex;gap:5px;align-items:center;font-size:8px'><span style='padding:7px;border:1px solid #303943;border-radius:8px'>Home</span><b>→</b><span style='padding:7px;border:1px solid #303943;border-radius:8px'>Product</span><b>→</b><span style='padding:7px;background:var(--accent);color:#071006;border-radius:8px'>Checkout</span></div>"}, {"name": "Prompts", "url": "prompts.html", "count": "34+ engineered prompts", "desc": "Preview-only prompts for building complete website systems with AI.", "preview": "<div style='padding:12px;border:1px solid #303943;border-radius:12px;width:240px'><span style='font-size:7px;color:#b8ff2c'>ECOMMERCE</span><b style='display:block;margin:7px 0;font-size:10px'>Build a premium storefront...</b><small style='color:#7f8995'>Copy engineered prompt</small></div>"}];const hg=document.getElementById("home-grid");HOME.forEach(x=>{const c=document.createElement("article");c.className="home-card";c.innerHTML=`<div class="home-preview">${x.preview}</div><div class="home-info"><div class="kicker">${x.count}</div><h2>${x.name}</h2><p>${x.desc}</p><a class="explore" href="${x.url}">Explore →</a></div>`;hg.appendChild(c)});</script></body></html>
