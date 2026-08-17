@@ -76,7 +76,9 @@ html,body{max-width:100%;overflow-x:hidden}
 
 
 
-<style id="ui-areena-auth-guard">html.auth-ready body{visibility:visible!important}</style>
+<style id="ui-areena-auth-guard">
+html,body{max-width:100%;overflow-x:hidden}
+</style>
 
 </head>
 <body><header class="sitebar"><a class="brand" href="index.html"><span class="brandmark"></span><span>UI Areena</span><small>/UI</small></a><button class="menu-btn" aria-label="Open navigation">•••</button></header>
@@ -111,6 +113,88 @@ html,body{max-width:100%;overflow-x:hidden}
 </div><div class="toast"></div>
 
 <script>
+/* =========================================================
+   UI AREENA — PUBLIC HOME + AUTH ON INTERACTION
+   Home stays freely viewable. Protected library navigation
+   sends unauthenticated visitors to login.html.
+========================================================= */
+const SUPABASE_URL="https://olqfwgbrgpywqkxcbjlt.supabase.co";
+const SUPABASE_KEY="sb_publishable_ISHDfYvnuczqozPHvx-AAg_6_XyZ8cc";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+async function requireAuth(target){
+  try{
+    const {data,error}=await supabaseClient.auth.getSession();
+    if(error || !data?.session){
+      location.href="login.html?next="+encodeURIComponent(target);
+      return false;
+    }
+    return true;
+  }catch(e){
+    location.href="login.html?next="+encodeURIComponent(target);
+    return false;
+  }
+}
+
+async function navigateProtected(target){
+  if(await requireAuth(target)) location.href=target;
+}
+
+/* Library links: home is public; all other destinations require login. */
+document.addEventListener("click",async e=>{
+  const link=e.target.closest("a[href]");
+  if(!link) return;
+  const href=link.getAttribute("href");
+  if(!href || href.startsWith("#") || href.startsWith("http") || href==="index.html") return;
+  if(link.classList.contains("drawer-link") || link.classList.contains("explore")){
+    e.preventDefault();
+    await navigateProtected(href);
+  }
+});
+
+/* =========================================================
+   ADMIN SHORTCUT — Alt + A, then Enter
+   Database authority: profiles.is_admin === true
+========================================================= */
+let adminShortcutArmed=false;
+let adminShortcutTimer=null;
+
+document.addEventListener("keydown",async e=>{
+  if(e.altKey && e.key.toLowerCase()==="a"){
+    e.preventDefault();
+    adminShortcutArmed=true;
+    clearTimeout(adminShortcutTimer);
+    adminShortcutTimer=setTimeout(()=>adminShortcutArmed=false,3000);
+    return;
+  }
+  if(adminShortcutArmed && e.key==="Enter"){
+    e.preventDefault();
+    adminShortcutArmed=false;
+    clearTimeout(adminShortcutTimer);
+    try{
+      const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
+      if(sessionError || !sessionData?.session){
+        location.href="login.html?next="+encodeURIComponent("index.html");
+        return;
+      }
+      const user=sessionData.session.user;
+      const {data:profile,error:profileError}=await supabaseClient
+        .from("profiles")
+        .select("is_admin")
+        .eq("id",user.id)
+        .single();
+      if(!profileError && profile?.is_admin===true){
+        location.href="admin.html";
+      }else{
+        toast("Admin access denied");
+      }
+    }catch(err){
+      console.error("Admin shortcut error:",err);
+      toast("Unable to verify admin access");
+    }
+  }
+});
+
 const navItems=[["Home","index.html","01"],["Buttons","buttons.html","40+"],["Navbars","navbar.html","39+"],["Forms","forms.html","32+"],["Cards","cards.html","38+"],["UI Library","ui-library.html","46+"],["Icons","icons.html","320+"],["Architecture","architecture.html","30+"],["Prompts","prompts.html","34+"]];
 const drawer=document.querySelector(".drawer");
 function openDrawer(){
